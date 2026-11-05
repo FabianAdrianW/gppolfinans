@@ -473,3 +473,19 @@ ul{margin:0}
 @media (min-width:960px){.claims:not(.claims--slip) .claims__ctas{justify-content:flex-end}}
 @media (max-width:599px){.row{grid-template-columns:auto 1fr;padding-inline:.25rem}.row__go{display:none}}
 @media (max-width:959px){.frame{order:-1}}
+
+/* ---------- Mobile: photos unfold next to their text while scrolling (--p set by main.js) ---------- */
+.reveal{display:none}
+@media (max-width:959px){
+  #frame,#photos{display:none}
+  .reveal{--p:0;display:block;position:relative;overflow:hidden;aspect-ratio:16/10;border-radius:calc(var(--radius) * 1.2);background:#141c1c;
+    clip-path:inset(calc((1 - var(--p)) * 38%) calc((1 - var(--p)) * 9%) round calc(var(--radius) * 1.2));will-change:clip-path}
+  .reveal img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(calc(1.14 - .14 * var(--p)));will-change:transform}
+  .reveal::after{content:"";position:absolute;inset:0;background:#141c1c;opacity:calc(.55 - .55 * var(--p));pointer-events:none}
+  .idx__ph{grid-column:1/-1;grid-row:1;margin-bottom:1.1rem;box-shadow:0 20px 40px rgba(0,0,0,.3)}
+  .idx__item{padding-block:1.4rem}
+  .step__ph{margin-top:1.25rem}
+  .step:first-child .step__ph{margin-top:1.4rem}
+  .step__bar{display:none}
+}
+@media (max-width:959px) and (prefers-reduced-motion:reduce){.reveal{--p:1!important}}

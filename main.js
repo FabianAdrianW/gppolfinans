@@ -185,6 +185,7 @@
     const schedule = () => {
       clearTimeout(timer);
       if (reduce || !visible || paused) return;
+      if (matchMedia('(max-width: 959px)').matches) return;
       timer = setTimeout(() => go((cur + 1) % steps.length), DUR);
     };
     steps.forEach((s, i) => {
@@ -199,6 +200,45 @@
     ledger.addEventListener('focusout', () => pause(false));
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; schedule(); }, { threshold: .35 }).observe(ledger);
     if (reduce) ledger.classList.add('is-paused');
+    window.__goStep = go;
+  }
+
+  /* ---------- Mobile: scroll-linked unfold of inline photos + scroll-spy for areas and steps ---------- */
+  const mobile = matchMedia('(max-width: 959px)');
+  const reveals = $$('.reveal');
+  if (reveals.length) {
+    const groups = [
+      { items: $$('.idx__item'), on: (i, list) => list.forEach((it, j) => it.classList.toggle('is-active', j === i)) },
+      { items: $$('#ledger .step'), on: i => window.__goStep && window.__goStep(i) },
+    ];
+    const last = groups.map(() => -1);
+    let ticking = false;
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    const frameFn = () => {
+      ticking = false;
+      if (!mobile.matches) return;
+      const vh = innerHeight, start = vh * 0.98, end = vh * 0.5;
+      reveals.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        if (top > vh * 1.2 || top < -vh) return;
+        const p = reduce ? 1 : ease(Math.min(1, Math.max(0, (start - top) / (start - end))));
+        el.style.setProperty('--p', p.toFixed(3));
+      });
+      const focus = vh * 0.42;
+      groups.forEach((g, gi) => {
+        if (!g.items.length) return;
+        const r0 = g.items[0].getBoundingClientRect(), r1 = g.items[g.items.length - 1].getBoundingClientRect();
+        if (r1.bottom < 0 || r0.top > vh) return;
+        let best = 0, d = Infinity;
+        g.items.forEach((it, i) => { const r = it.getBoundingClientRect(), c = Math.abs((r.top + r.bottom) / 2 - focus); if (c < d) { d = c; best = i; } });
+        if (best !== last[gi]) { last[gi] = best; g.on(best, g.items); }
+      });
+    };
+    const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frameFn); } };
+    addEventListener('scroll', req, { passive: true });
+    addEventListener('resize', req);
+    mobile.addEventListener?.('change', req);
+    req();
   }
 
   /* ---------- Checklist meter (local only, not stored) ---------- */

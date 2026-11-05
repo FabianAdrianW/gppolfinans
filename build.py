@@ -342,7 +342,7 @@ def picture(name, alt, w=1600, h=1067, eager=False, cls=""):
 
 # ---------------- Index ----------------
 def index():
-    idx = "".join(f'''<li><a class="idx__item{" is-active" if i == 0 else ""}" href="{a["slug"]}.html"><span class="idx__icon">{ic(a["icon"])}</span><span class="idx__name">{a["name"]}</span><span class="idx__go">{ic("arrow")}</span><span class="idx__desc"><span><span>{a["card"]}</span></span></span></a></li>''' for i, a in enumerate(AREAS))
+    idx = "".join(f'''<li><a class="idx__item{" is-active" if i == 0 else ""}" href="{a["slug"]}.html"><span class="idx__ph reveal" aria-hidden="true"><img src="img/{a["img"]}-800.webp" width="800" height="533" alt="" loading="lazy" decoding="async"></span><span class="idx__icon">{ic(a["icon"])}</span><span class="idx__name">{a["name"]}</span><span class="idx__go">{ic("arrow")}</span><span class="idx__desc"><span><span>{a["card"]}</span></span></span></a></li>''' for i, a in enumerate(AREAS))
     frame = "".join(f'<img class="{"is-active" if i == 0 else ""}" src="img/{a["img"]}-800.webp" data-full="img/{a["img"]}.webp" width="800" height="533" alt="" decoding="async">' for i, a in enumerate(AREAS))
     cards = "".join(f'<a class="frame__cap{" is-active" if i == 0 else ""}" href="{a["slug"]}.html"{"" if i == 0 else ' tabindex="-1" aria-hidden="true"'}><span class="frame__ic">{ic(a["icon"])}</span><span class="frame__txt"><strong>{a["name"]}</strong><span>{a["card"]}</span></span><span class="frame__more">Szczegóły {ic("arrow")}</span></a>' for i, a in enumerate(AREAS))
     rows = [
@@ -357,7 +357,7 @@ def index():
              ("Porównanie rozwiązań","Zestawiamy oferty i pokazujemy różnice w zakresie, wyłączeniach i cenie.","step-2","Dokumenty z porównaniem ofert rozłożone na stole"),
              ("Nasza propozycja","Rekomendujemy wariant i mówimy wprost, dlaczego właśnie ten.","step-3","Doradczyni omawia warianty przy tablicy z wydrukami"),
              ("Kolejne kroki","Pomagamy zawrzeć umowę i zostajemy w kontakcie przy zmianach i szkodzie.","step-4","Doradca wskazuje klientce miejsce na dokumencie")]
-    steps_html = "".join(f'<li class="step{" is-active" if i == 0 else ""}"><button type="button" aria-controls="photos" aria-pressed="{"true" if i == 0 else "false"}"><span class="step__num" aria-hidden="true"></span><span class="step__t">{t}</span><span class="step__d">{d}</span><span class="step__bar" aria-hidden="true"></span></button></li>' for i, (t, d, _, _) in enumerate(steps))
+    steps_html = "".join(f'<li class="step{" is-active" if i == 0 else ""}"><span class="step__ph reveal">{picture(img, alt).replace('sizes="(min-width:960px) 50vw, 100vw"', 'sizes="100vw"')}</span><button type="button" aria-controls="photos" aria-pressed="{"true" if i == 0 else "false"}"><span class="step__num" aria-hidden="true"></span><span class="step__t">{t}</span><span class="step__d">{d}</span><span class="step__bar" aria-hidden="true"></span></button></li>' for i, (t, d, img, alt) in enumerate(steps))
     photos = "".join(picture(img, alt, cls="is-active" if i == 0 else "") for i, (_, _, img, alt) in enumerate(steps)).replace('loading="lazy" ', '')
     ld = {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Polfinans Grupa Partnerska","url":"https://gppolfinans.pl/","telephone":PHONE,"email":MAIL,
           "address":{"@type":"PostalAddress","streetAddress":ADDR1,"postalCode":"54-156","addressLocality":"Wrocław","addressCountry":"PL"},"areaServed":"Wrocław"}
