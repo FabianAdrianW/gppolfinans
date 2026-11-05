@@ -216,7 +216,7 @@
     const run = () => {
       ticking = false;
       if (!mobile.matches) return;
-      const vh = innerHeight, line = vh * 0.62;
+      const vh = innerHeight, line = vh * 0.52;
       groups.forEach((g, gi) => {
         let cur = -1;
         g.rows.forEach((r, i) => {
