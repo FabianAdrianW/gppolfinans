@@ -343,7 +343,8 @@ def picture(name, alt, w=1600, h=1067, eager=False, cls=""):
 # ---------------- Index ----------------
 def index():
     idx = "".join(f'''<li><a class="idx__item{" is-active" if i == 0 else ""}" href="{a["slug"]}.html"><span class="idx__icon">{ic(a["icon"])}</span><span class="idx__name">{a["name"]}</span><span class="idx__go">{ic("arrow")}</span><span class="idx__desc"><span><span>{a["card"]}</span></span></span></a></li>''' for i, a in enumerate(AREAS))
-    frame = "".join(f'<img class="{"is-active" if i == 0 else ""}" src="img/{a["img"]}-800.webp" data-full="img/{a["img"]}.webp" width="800" height="533" alt="" loading="lazy" decoding="async">' for i, a in enumerate(AREAS))
+    frame = "".join(f'<img class="{"is-active" if i == 0 else ""}" src="img/{a["img"]}-800.webp" data-full="img/{a["img"]}.webp" width="800" height="533" alt="" decoding="async">' for i, a in enumerate(AREAS))
+    cards = "".join(f'<a class="frame__cap{" is-active" if i == 0 else ""}" href="{a["slug"]}.html"{"" if i == 0 else ' tabindex="-1" aria-hidden="true"'}><span class="frame__ic">{ic(a["icon"])}</span><span class="frame__txt"><strong>{a["name"]}</strong><span>{a["card"]}</span></span><span class="frame__more">Szczegóły {ic("arrow")}</span></a>' for i, a in enumerate(AREAS))
     rows = [
       ("search","Analiza obecnych polis","Przynieś to, co już masz. Sprawdzimy zakres, sumy i wyłączenia, żeby było jasne, przed czym polisa chroni, a przed czym nie.","Analiza obecnych polis"),
       ("scale","Porównanie ofert","Zestawiamy warianty kilku towarzystw według tych samych kryteriów. Różnice w zakresie i cenie widzisz obok siebie.","Inne / jeszcze nie wiem"),
@@ -357,7 +358,7 @@ def index():
              ("Nasza propozycja","Rekomendujemy wariant i mówimy wprost, dlaczego właśnie ten.","step-3","Doradczyni omawia warianty przy tablicy z wydrukami"),
              ("Kolejne kroki","Pomagamy zawrzeć umowę i zostajemy w kontakcie przy zmianach i szkodzie.","step-4","Doradca wskazuje klientce miejsce na dokumencie")]
     steps_html = "".join(f'<li class="step{" is-active" if i == 0 else ""}"><button type="button" aria-controls="photos" aria-pressed="{"true" if i == 0 else "false"}"><span class="step__num" aria-hidden="true"></span><span class="step__t">{t}</span><span class="step__d">{d}</span><span class="step__bar" aria-hidden="true"></span></button></li>' for i, (t, d, _, _) in enumerate(steps))
-    photos = "".join(picture(img, alt, cls="is-active" if i == 0 else "") for i, (_, _, img, alt) in enumerate(steps))
+    photos = "".join(picture(img, alt, cls="is-active" if i == 0 else "") for i, (_, _, img, alt) in enumerate(steps)).replace('loading="lazy" ', '')
     ld = {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Polfinans Grupa Partnerska","url":"https://gppolfinans.pl/","telephone":PHONE,"email":MAIL,
           "address":{"@type":"PostalAddress","streetAddress":ADDR1,"postalCode":"54-156","addressLocality":"Wrocław","addressCountry":"PL"},"areaServed":"Wrocław"}
     extra = f'<link rel="preload" as="image" href="img/hero-dom-800.webp" imagesrcset="img/hero-dom-800.webp 800w, img/hero-dom.webp 1600w" imagesizes="(min-width:960px) 50vw, 100vw">\n<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
@@ -399,7 +400,7 @@ def index():
         <ul class="idx" id="idx">{idx}</ul>
         <div class="areas__foot"><p>Nie widzisz swojej sprawy na liście? Napisz, czego dotyczy. Jeśli to nie nasz obszar, powiemy to wprost.</p><a class="link-more" href="#kontakt" data-topic="Inne / jeszcze nie wiem"><span>Opisz swoją sytuację</span>{ic("arrow")}</a></div>
       </div>
-      <div class="frame" id="frame" aria-hidden="true">{frame}<span class="frame__cap">{ic(AREAS[0]["icon"])}<span>{AREAS[0]["name"]}</span></span></div>
+      <div class="frame" id="frame">{frame}{cards}</div>
     </div>
   </div>
 </section>
@@ -429,7 +430,7 @@ def index():
         <div class="ledger__title"><strong>Twoje ustalenia</strong><span>Krok po kroku</span></div>
         <ol class="steps">{steps_html}</ol>
       </div>
-      <div class="photos" id="photos" aria-live="off">{photos}<span class="photos__cap">Ilustracja kierunku marki</span></div>
+      <div class="photos" id="photos" aria-live="off">{photos}</div>
     </div>
   </div>
 </section>
@@ -458,7 +459,7 @@ def index():
   <div class="wrap about__grid">
     <figure class="portrait">
       <div class="portrait__frame">{picture("about","Burgundowa teczka z dokumentami na kamiennym parapecie w słońcu", 1600, 1067)}</div>
-      <blockquote class="quote">To, co ważne, wymaga dobrego partnera.</blockquote>
+      <blockquote class="quote"><p>To, co ważne, wymaga dobrego partnera.</p></blockquote>
     </figure>
     <div class="about__text">
       <span class="eyebrow">O nas</span>

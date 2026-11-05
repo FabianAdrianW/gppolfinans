@@ -103,28 +103,59 @@
   const q = new URLSearchParams(location.search).get('temat');
   if (q) setTopic(q);
 
-  /* ---------- Areas: index list drives the framed photo (wipe) ---------- */
+  /* ---------- Shared: stacked wipe. New photo always wipes over a fully visible one ---------- */
+  const wiper = (imgs, ms) => {
+    let top = Math.max(0, imgs.findIndex(im => im.classList.contains('is-active'))), want = top, z = 1, t = null;
+    imgs.forEach((im, j) => { im.style.zIndex = j === top ? 1 : 0; });
+    const snapOff = im => { im.style.transition = 'none'; im.classList.remove('is-active'); void im.offsetWidth; im.style.transition = ''; };
+    const cleanup = () => { imgs.forEach((im, j) => { if (j !== top) { snapOff(im); im.style.zIndex = 0; } }); imgs[top].style.zIndex = 1; z = 1; };
+    return i => {
+      want = i;
+      if (i === top) return;
+      const im = imgs[i];
+      im.loading = 'eager';
+      const ready = im.complete && im.naturalWidth ? Promise.resolve()
+        : Promise.race([(im.decode ? im.decode() : Promise.resolve()).catch(() => {}), new Promise(r => setTimeout(r, 1500))]);
+      ready.then(() => {
+        if (want !== i || i === top) return;
+        if (im.classList.contains('is-active')) snapOff(im);
+        im.style.zIndex = ++z;
+        requestAnimationFrame(() => im.classList.add('is-active'));
+        top = i; clearTimeout(t); t = setTimeout(cleanup, ms);
+      });
+    };
+  };
+  /* hover intent: sweeping the cursor across rows does not fire every row */
+  const intent = (el, fn, ms = 90) => {
+    let h = null;
+    el.addEventListener('pointerenter', e => { if (e.pointerType !== 'mouse') return; clearTimeout(h); h = setTimeout(fn, ms); });
+    el.addEventListener('pointerleave', () => clearTimeout(h));
+  };
+  const warm = imgs => imgs.forEach(im => {
+    const full = im.dataset.full; if (!full || innerWidth <= 700) return;
+    delete im.dataset.full;
+    const pre = new Image(); pre.src = full;
+    (pre.decode ? pre.decode() : Promise.resolve()).then(() => { im.src = full; }).catch(() => {});
+  });
+
+  /* ---------- Areas: index list drives the framed photo ---------- */
   const idx = $('#idx'), frame = $('#frame');
   if (idx && frame) {
-    const items = $$('.idx__item', idx), imgs = $$('img', frame), cap = $('.frame__cap', frame);
+    const items = $$('.idx__item', idx), imgs = $$('img', frame), cards = $$('.frame__cap', frame);
+    const wipe = wiper(imgs, 1000);
     let cur = 0, timer = null;
-    const upgrade = () => imgs.forEach(im => { if (im.dataset.full && innerWidth > 700) { im.src = im.dataset.full; delete im.dataset.full; } });
     const set = i => {
       if (i === cur) return;
-      imgs.forEach((im, j) => { im.classList.toggle('was-active', j === cur); im.classList.toggle('is-active', j === i); });
       items.forEach((it, j) => it.classList.toggle('is-active', j === i));
-      cap.innerHTML = $('.idx__icon', items[i]).innerHTML + `<span>${$('.idx__name', items[i]).textContent}</span>`;
-      cur = i;
+      cards.forEach((c, j) => { c.classList.toggle('is-active', j === i); c.tabIndex = j === i ? 0 : -1; c.setAttribute('aria-hidden', String(j !== i)); });
+      wipe(i); cur = i;
     };
     const stop = () => { clearInterval(timer); timer = null; };
-    items.forEach((it, i) => {
-      it.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') set(i); });
-      it.addEventListener('focus', () => set(i));
-    });
+    items.forEach((it, i) => { intent(it, () => set(i)); it.addEventListener('focus', () => set(i)); });
     new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { upgrade(); if (touch && !reduce && !timer) timer = setInterval(() => set((cur + 1) % items.length), 3500); }
+      if (e.isIntersecting) { warm(imgs); if (touch && !reduce && !timer) timer = setInterval(() => set((cur + 1) % items.length), 3500); }
       else stop();
-    }, { rootMargin: '300px 0px' }).observe(frame);
+    }, { rootMargin: '600px 0px' }).observe(frame);
   }
 
   /* ---------- Buttons: fill blooms from where the cursor enters ---------- */
@@ -138,11 +169,12 @@
   const ledger = $('#ledger');
   if (ledger) {
     const steps = $$('.step', ledger), photos = $$('#photos img');
+    const wipePhotos = wiper(photos, 1100);
     const DUR = 6000; let cur = 0, timer = null, visible = false, paused = false;
     ledger.style.setProperty('--dur', DUR + 'ms');
     const go = i => {
       if (i === cur) return;
-      photos.forEach((p, j) => { p.classList.toggle('was-active', j === cur); p.classList.toggle('is-active', j === i); });
+      wipePhotos(i);
       steps.forEach((s, j) => {
         s.classList.toggle('is-active', j === i);
         $('button', s).setAttribute('aria-pressed', String(j === i));
@@ -158,7 +190,7 @@
     steps.forEach((s, i) => {
       const b = $('button', s);
       b.addEventListener('click', () => go(i));
-      b.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') go(i); });
+      intent(b, () => go(i));
     });
     const pause = v => { paused = v; ledger.classList.toggle('is-paused', v); if (v) clearTimeout(timer); else schedule(); };
     ledger.addEventListener('pointerenter', () => pause(true));
