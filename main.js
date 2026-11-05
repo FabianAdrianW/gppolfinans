@@ -203,41 +203,33 @@
     window.__goStep = go;
   }
 
-  /* ---------- Mobile: scroll-linked unfold of inline photos + scroll-spy for areas and steps ---------- */
+  /* ---------- Mobile: row opens when its text reaches the reading line; closes again only off-screen below,
+     so nothing above the viewport changes height and the page never jumps ---------- */
   const mobile = matchMedia('(max-width: 959px)');
-  const reveals = $$('.reveal');
-  if (reveals.length) {
-    const groups = [
-      { items: $$('.idx__item'), on: (i, list) => list.forEach((it, j) => it.classList.toggle('is-active', j === i)) },
-      { items: $$('#ledger .step'), on: i => window.__goStep && window.__goStep(i) },
-    ];
+  const groups = [
+    { rows: $$('#idx li'), act: (i, rows) => rows.forEach((r, j) => $('.idx__item', r).classList.toggle('is-active', j === i)) },
+    { rows: $$('#ledger .step'), act: i => window.__goStep && window.__goStep(i) },
+  ].filter(g => g.rows.length);
+  if (groups.length) {
     const last = groups.map(() => -1);
     let ticking = false;
-    const ease = t => 1 - Math.pow(1 - t, 3);
-    const frameFn = () => {
+    const run = () => {
       ticking = false;
       if (!mobile.matches) return;
-      const vh = innerHeight, start = vh * 0.98, end = vh * 0.5;
-      reveals.forEach(el => {
-        const top = el.getBoundingClientRect().top;
-        if (top > vh * 1.2 || top < -vh) return;
-        const p = reduce ? 1 : ease(Math.min(1, Math.max(0, (start - top) / (start - end))));
-        el.style.setProperty('--p', p.toFixed(3));
-      });
-      const focus = vh * 0.42;
+      const vh = innerHeight, line = vh * 0.62;
       groups.forEach((g, gi) => {
-        if (!g.items.length) return;
-        const r0 = g.items[0].getBoundingClientRect(), r1 = g.items[g.items.length - 1].getBoundingClientRect();
-        if (r1.bottom < 0 || r0.top > vh) return;
-        let best = 0, d = Infinity;
-        g.items.forEach((it, i) => { const r = it.getBoundingClientRect(), c = Math.abs((r.top + r.bottom) / 2 - focus); if (c < d) { d = c; best = i; } });
-        if (best !== last[gi]) { last[gi] = best; g.on(best, g.items); }
+        let cur = -1;
+        g.rows.forEach((r, i) => {
+          const top = r.getBoundingClientRect().top, u = $('.unfold', r);
+          if (top < line) { if (!r.classList.contains('is-open')) { r.classList.add('is-open'); u.classList.add('is-open'); $$('img', u).forEach(im => im.loading = 'eager'); } cur = i; }
+          else if (top > vh) { r.classList.remove('is-open'); u.classList.remove('is-open'); }
+        });
+        if (cur > -1 && cur !== last[gi]) { last[gi] = cur; g.act(cur, g.rows); }
       });
     };
-    const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frameFn); } };
+    const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(run); } };
     addEventListener('scroll', req, { passive: true });
     addEventListener('resize', req);
-    mobile.addEventListener?.('change', req);
     req();
   }
 
