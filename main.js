@@ -288,7 +288,7 @@
       form.reset(); status.classList.add('is-ok');
       status.textContent = 'Dziękujemy. Wiadomość dotarła, odezwiemy się wkrótce.';
     } catch {
-      status.innerHTML = `Nie udało się wysłać. Zadzwoń: <a href="tel:+48509064464">509 064 464</a> albo napisz na <a href="mailto:${form.dataset.mail}">${form.dataset.mail}</a>.`;
+      status.innerHTML = `Nie udało się wysłać. Zadzwoń: <a href="tel:+48504031330">504 031 330</a> albo napisz na <a href="mailto:${form.dataset.mail}">${form.dataset.mail}</a>.`;
     } finally { btn.removeAttribute('aria-busy'); }
   });
 

@@ -3,7 +3,7 @@
 import json, pathlib
 ROOT = pathlib.Path(__file__).parent
 
-PHONE = "+48 509 064 464"; PHONE_TEL = "+48509064464"; PHONE_SHORT = "509 064 464"
+PHONE = "+48 504 031 330"; PHONE_TEL = "+48504031330"; PHONE_SHORT = "504 031 330"
 MAIL = "gppolfinans@gmail.com"
 ADDR1 = "ul. Metalowców 9, pok. 110"; ADDR2 = "54-156 Wrocław"
 MAPS = "https://www.google.com/maps/search/?api=1&query=Metalowc%C3%B3w+9+54-156+Wroc%C5%82aw"
@@ -45,12 +45,14 @@ AREAS = [
  dict(slug="dom-i-majatek", icon="home", img="area-dom", name="Dom i majątek", topic="Dom i majątek",
    card="Mieszkanie, dom, wyposażenie i OC w życiu prywatnym.",
    title="Ubezpieczenie domu i mieszkania", seo="Ubezpieczenie domu i mieszkania, Wrocław",
-   lead="Mury, wyposażenie, rzeczy, których nie da się łatwo odkupić, i odpowiedzialność wobec sąsiadów. Sprawdzimy, co obejmuje polisa i czy suma ubezpieczenia odpowiada dzisiejszej wartości domu.",
+   lead="Dom to nie tylko mury i wyposażenie, ale również przedmioty i wspomnienia, które mają dla Ciebie szczególną wartość. Pomożemy dobrać odpowiedni zakres ochrony, uwzględniając wartość nieruchomości, jej wyposażenia oraz odpowiedzialność cywilną wobec innych osób. Sprawdzimy również, czy suma ubezpieczenia odpowiada aktualnej wartości Twojego majątku.",
+   when_lead="Zakup nieruchomości, wynajem, remont czy zmiana dotychczasowej polisy – każda z tych sytuacji to dobry moment, aby przyjrzeć się zakresowi ubezpieczenia i dopasować go do aktualnych potrzeb.",
    alt="Otwarte drzwi wejściowe domu, na komodzie burgundowa teczka i klucze",
    when=["Kupujesz mieszkanie albo dom na kredyt, a bank wymaga polisy.",
-         "Kończysz budowę lub remont i dom jest dziś wart więcej niż w dniu zawarcia umowy.",
+         "Zakończyłeś budowę, remont lub modernizację i chcesz zadbać o aktualną wartość ubezpieczenia nieruchomości.",
          "Masz polisę od lat i nie pamiętasz, co dokładnie obejmuje.",
-         "Wynajmujesz mieszkanie albo sam je komuś wynajmujesz."],
+         "Wynajmujesz mieszkanie lub udostępniasz swoją nieruchomość najemcom.",
+         "Kończy się Twoje ubezpieczenie i chcesz porównać dostępne oferty."],
    qs=[("Co chcesz chronić?","Mury, stałe elementy, wyposażenie, ruchomości, budynki gospodarcze na działce."),
        ("Od jakich zdarzeń?","Lista nazwanych ryzyk albo formuła wszystkich ryzyk, z wyłączeniami zapisanymi w warunkach."),
        ("Jaka suma ubezpieczenia?","Wartość odtworzeniowa czy rzeczywista i ile kosztowałaby dziś odbudowa."),
@@ -154,7 +156,7 @@ AREAS = [
    card="Budynki, maszyny, uprawy i obowiązkowe OC rolnika.",
    title="Ubezpieczenie gospodarstwa rolnego", seo="Ubezpieczenie gospodarstwa rolnego i OC rolnika",
    lead="Budynki, maszyny, zwierzęta i uprawy, do tego obowiązkowe OC rolnika. Uporządkujemy, co musisz mieć z mocy prawa, a co warto dobrać do skali gospodarstwa.",
-   alt="Dwie osoby z planami budynku oglądają jasne wnętrze w remoncie",
+   alt="Pola uprawne w pasach, w tle budynki gospodarcze i silosy",
    when=["Przejmujesz gospodarstwo albo kupujesz ziemię.",
          "Stawiasz nowy budynek albo kupujesz maszyny.",
          "Chcesz zabezpieczyć uprawy przed gradem, przymrozkiem lub suszą.",
@@ -177,23 +179,24 @@ BY = {a["slug"]: a for a in AREAS}
 
 CLAIMS = dict(slug="pomoc-przy-szkodzie", img="step-1", name="Pomoc przy szkodzie", topic="Szkoda",
    title="Pomoc przy szkodzie", seo="Pomoc przy zgłoszeniu szkody i likwidacji, Wrocław",
-   lead="Szkoda to zły moment na czytanie warunków polisy. Zadzwoń, a pomożemy ustalić, co zgłosić, jakie dokumenty zebrać i jak rozmawiać z towarzystwem.",
+   lead="Szkoda to zły moment na czytanie warunków polisy. Zadzwoń do nas, a pomożemy Ci ustalić, jak zgłosić szkodę, jakie dokumenty przygotować i na co zwrócić uwagę w kontakcie z towarzystwem ubezpieczeniowym.",
    alt="Kobieta wypełnia dokument przy stole, obok burgundowa teczka",
-   steps=[("Zadbaj o bezpieczeństwo","Ludzie i zwierzęta najpierw. Odetnij wodę lub prąd, przy wypadku wezwij pomoc."),
-          ("Ogranicz szkodę","Zrób to, co rozsądne, żeby szkoda nie rosła. Warunki polis tego wymagają."),
-          ("Zrób zdjęcia","Zanim cokolwiek naprawisz albo wyrzucisz. Ujęcia ogólne i szczegóły."),
-          ("Zawiadom odpowiednie służby","Policję przy kradzieży, włamaniu lub wypadku z rannymi, administrację przy zalaniu."),
-          ("Zadzwoń do nas","Powiemy, co dalej, i pomożemy zgłosić szkodę w terminie z warunków polisy.")],
-   prep=["Numer polisy albo nazwa towarzystwa",
-         "Data, miejsce i krótki opis zdarzenia",
-         "Zdjęcia uszkodzeń",
-         "Dane drugiej strony i oświadczenie sprawcy przy kolizji",
-         "Numer notatki lub protokołu policji, jeśli była wzywana",
-         "Rachunki i faktury za zniszczone rzeczy",
-         "Numer konta do wypłaty odszkodowania"],
-   faq=[("Ile mam czasu na zgłoszenie?","Termin podają ogólne warunki ubezpieczenia i bywa krótki, czasem to kilka dni od zdarzenia. Kradzież zgłasza się policji niezwłocznie. Dlatego lepiej zadzwonić od razu."),
-        ("Co, jeśli nie zgadzam się z decyzją towarzystwa?","Możesz złożyć reklamację albo odwołanie. Pomożemy przygotować uzasadnienie i zebrać dokumenty. W sporze możesz też zwrócić się do Rzecznika Finansowego."),
-        ("Czy z OC sprawcy należy mi się auto zastępcze?","Tak, jeśli Twoje auto nie nadaje się do jazdy albo jest w naprawie, a najem był uzasadniony. Warto ustalić to z nami przed wynajęciem.")])
+   steps=[("Zadbaj o bezpieczeństwo","W pierwszej kolejności zadbaj o ludzi i zwierzęta. Jeśli to konieczne i bezpieczne, odetnij dopływ wody lub prądu. W razie zagrożenia życia lub zdrowia wezwij odpowiednie służby."),
+          ("Ogranicz rozmiar szkody","Podejmij rozsądne działania, aby zapobiec dalszym zniszczeniom. Pamiętaj, że obowiązek ograniczania skutków szkody może wynikać z warunków ubezpieczenia."),
+          ("Zadbaj o dokumentację","Zrób zdjęcia uszkodzeń – zarówno całego miejsca zdarzenia, jak i szczegółów. Jeśli to możliwe, udokumentuj szkodę przed rozpoczęciem napraw lub usuwaniem zniszczonych rzeczy."),
+          ("Powiadom odpowiednie służby","W przypadku kradzieży lub włamania zgłoś zdarzenie policji. Jeśli są osoby ranne, wezwij pomoc. Przy zalaniu poinformuj administrację budynku lub zarządcę nieruchomości."),
+          ("Skontaktuj się z nami","Podpowiemy, jakie kroki podjąć, pomożemy przygotować zgłoszenie i przypomnimy o terminach wynikających z warunków Twojej polisy.")],
+   prep=["Numer polisy lub nazwę towarzystwa ubezpieczeniowego",
+         "Datę, miejsce i krótki opis zdarzenia",
+         "Zdjęcia dokumentujące uszkodzenia",
+         "Dane drugiej strony oraz oświadczenie sprawcy – w przypadku kolizji",
+         "Numer notatki lub protokołu policji – jeśli policja interweniowała",
+         "Rachunki, faktury lub inne dokumenty potwierdzające wartość utraconych lub uszkodzonych rzeczy",
+         "Numer rachunku bankowego do wypłaty odszkodowania"],
+   faq_lead="Poniższe odpowiedzi mają charakter ogólny. Szczegółowe zasady postępowania zależą od warunków ubezpieczenia i rodzaju zdarzenia, dlatego każdą sytuację analizujemy indywidualnie.",
+   faq=[("Ile mam czasu na zgłoszenie szkody?","Termin zależy od rodzaju ubezpieczenia i zapisów ogólnych warunków ubezpieczenia. W niektórych przypadkach na zgłoszenie jest niewiele czasu. Kradzież lub włamanie należy niezwłocznie zgłosić policji, zgodnie z wymaganiami polisy. Nie zwlekaj z kontaktem – pomożemy Ci ustalić, jakie terminy obowiązują w Twojej sytuacji."),
+        ("Co zrobić, jeśli nie zgadzam się z decyzją towarzystwa ubezpieczeniowego?","Jeśli nie zgadzasz się z decyzją, możesz złożyć reklamację i przedstawić argumenty przemawiające za ponownym rozpatrzeniem sprawy. Pomożemy Ci przeanalizować decyzję, przygotować uzasadnienie i skompletować dokumenty. W przypadku sporu możesz również skorzystać z pomocy Rzecznika Finansowego."),
+        ("Czy z OC sprawcy przysługuje mi samochód zastępczy?","Możesz ubiegać się o pokrycie kosztów wynajmu samochodu zastępczego, jeśli korzystanie z niego było uzasadnione i niezbędne na czas naprawy lub w okresie, w którym Twój samochód nie nadawał się do użytkowania.")])
 
 TOPICS = [a["topic"] for a in AREAS] + ["Szkoda", "Analiza obecnych polis", "Inne / jeszcze nie wiem"]
 
@@ -217,7 +220,7 @@ def head(title, desc, canonical, extra=""):
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B2E2E'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='21' text-anchor='middle' fill='%23F7F4EF'%3Ep%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1793918337">
+<link rel="stylesheet" href="styles.css?v=1794007677">
 {extra}</head>
 <body>
 <a class="skip" href="#main">Przejdź do treści</a>
@@ -228,7 +231,7 @@ LOGO = '<span class="logo__word">polf<i>i</i>nans</span><span class="logo__sub">
 
 def nav(home=True, current=None):
     p = "" if home else "index.html"
-    items = [("obszary","Ubezpieczenia"),("proces","Jak pracujemy"),("szkoda","Szkoda"),("o-nas","O nas"),("kontakt","Kontakt")]
+    items = [("obszary","Ubezpieczenia"),("proces","Nasze podejście"),("szkoda","Szkoda"),("o-nas","O nas"),("kontakt","Kontakt")]
     def cur(k):
         if current == k: return ' aria-current="page"'
         return ""
@@ -239,8 +242,6 @@ def nav(home=True, current=None):
     <a class="logo" href="{'#top' if home else 'index.html'}" aria-label="Polfinans Grupa Partnerska, strona główna">{LOGO}</a>
     <ul class="nav__links" id="navLinks">{lis}<span class="nav__indicator" aria-hidden="true"></span></ul>
     <div class="nav__actions">
-      <a class="nav__phone" href="tel:{PHONE_TEL}">{ic("phone")}<span>{PHONE_SHORT}</span></a>
-      <a class="btn btn--primary nav__cta" href="#kontakt">Porozmawiajmy</a>
       <button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Otwórz menu"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -248,8 +249,6 @@ def nav(home=True, current=None):
 </header>
 <nav class="drawer" id="drawer" aria-label="Menu">
   {drawer}
-  <a class="btn btn--primary" href="#kontakt">Porozmawiajmy</a>
-  <p class="drawer__phone">Albo zadzwoń: <a href="tel:{PHONE_TEL}">{PHONE}</a></p>
 </nav>
 '''
 
@@ -260,7 +259,7 @@ def contact(topic=""):
     <div>
       <span class="eyebrow">Kontakt</span>
       <h2 id="contact-title" style="margin-top:1.1rem">Porozmawiajmy o tym, co chcesz chronić</h2>
-      <p class="contact__lead">Zadzwoń, napisz albo zostaw wiadomość w formularzu. Odezwiemy się, żeby umówić rozmowę w dogodnym dla Ciebie terminie.</p>
+      <p class="contact__lead">Zadzwoń, napisz lub zostaw wiadomość w formularzu. Skontaktujemy się z Tobą, aby porozmawiać o tym, jak możemy Ci pomóc.</p>
       <a class="bigphone" href="tel:{PHONE_TEL}"><small>{ic("phone")}Zadzwoń</small><span>{PHONE}</span></a>
       <ul class="lines">
         <li><a class="line" href="mailto:{MAIL}" data-copy="{MAIL}">{ic("mail")}<div><small>E-mail</small><span>{MAIL}</span></div><span class="line__go">{ic("arrow")}</span></a></li>
@@ -309,7 +308,7 @@ def footer(home=True):
     <div class="footer__grid">
       <div>
         <a class="logo" href="{p or '#top'}" aria-label="Polfinans, strona główna">{LOGO}</a>
-        <p>Multiagencja ubezpieczeniowa z Wrocławia. Jasne decyzje. Osobista opieka.</p>
+        <p>Bezpieczeństwo to kwestia wyboru. Dobre decyzje to spokojna przyszłość.</p>
         <!-- TODO: numer wpisu w rejestrze pośredników ubezpieczeniowych KNF (RPU) oraz NIP -->
       </div>
       <div><h3>Ubezpieczenia</h3><ul>{areas}<li><a href="pomoc-przy-szkodzie.html">Pomoc przy szkodzie</a></li></ul></div>
@@ -330,7 +329,7 @@ def footer(home=True):
   <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń</a>
   <a class="btn btn--ghost" href="#kontakt">Napisz</a>
 </div>
-<script src="main.js?v=1793918337" defer></script>
+<script src="main.js?v=1794007677" defer></script>
 </body>
 </html>
 '''
@@ -353,10 +352,10 @@ def index():
       ("refresh","Stała opieka","Wracamy do ustaleń, kiedy zmienia się Twoja sytuacja albo zbliża się odnowienie polisy.","Inne / jeszcze nie wiem"),
     ]
     rows_html = "".join(f'<li><a class="row" href="#kontakt" data-topic="{tp}"><span class="row__icon">{ic(icn)}</span><h3>{t}</h3><p>{d}</p><span class="row__go">{ic("arrow")}</span></a></li>' for icn, t, d, tp in rows)
-    steps = [("Analiza potrzeb","Rozmawiamy o Twojej sytuacji i o tym, co chcesz chronić.","step-1","Rozmowa o sytuacji klienta przy stole"),
-             ("Porównanie rozwiązań","Zestawiamy oferty i pokazujemy różnice w zakresie, wyłączeniach i cenie.","step-2","Dokumenty z porównaniem ofert rozłożone na stole"),
-             ("Nasza propozycja","Rekomendujemy wariant i mówimy wprost, dlaczego właśnie ten.","step-3","Doradczyni omawia warianty przy tablicy z wydrukami"),
-             ("Kolejne kroki","Pomagamy zawrzeć umowę i zostajemy w kontakcie przy zmianach i szkodzie.","step-4","Doradca wskazuje klientce miejsce na dokumencie")]
+    steps = [("Analiza potrzeb","Rozmawiamy o Twojej sytuacji, oczekiwaniach i tym, co jest dla Ciebie najważniejsze.","step-1","Rozmowa o sytuacji klienta przy stole"),
+             ("Porównujemy dostępne oferty","Porównujemy oferty różnych towarzystw ubezpieczeniowych, zwracając uwagę na zakres ochrony, wyłączenia odpowiedzialności i wysokość składki.","step-2","Dokumenty z porównaniem ofert rozłożone na stole"),
+             ("Przedstawiamy rekomendację","Proponujemy rozwiązanie dopasowane do Twoich potrzeb i wyjaśniamy, dlaczego właśnie ten wariant warto rozważyć.","step-3","Doradczyni omawia warianty przy tablicy z wydrukami"),
+             ("Zawarcie ubezpieczenia i dalsze wsparcie","Pomagamy w zawarciu umowy i pozostajemy do Twojej dyspozycji również po zakupie polisy – przy aktualizacji ochrony i w przypadku szkody.","step-4","Doradca wskazuje klientce miejsce na dokumencie")]
     steps_html = "".join(f'<li class="step{" is-active" if i == 0 else ""}"><button type="button" aria-controls="photos" aria-pressed="{"true" if i == 0 else "false"}"><span class="step__num" aria-hidden="true"></span><span class="step__t">{t}</span><span class="step__d">{d}</span><span class="step__bar" aria-hidden="true"></span></button><span class="unfold step__ph"><span class="unfold__in"><span class="reveal">{picture(img, alt).replace('sizes="(min-width:960px) 50vw, 100vw"', 'sizes="100vw"')}</span></span></span></li>' for i, (t, d, img, alt) in enumerate(steps))
     photos = "".join(picture(img, alt, cls="is-active" if i == 0 else "") for i, (_, _, img, alt) in enumerate(steps)).replace('loading="lazy" ', '')
     ld = {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Polfinans Grupa Partnerska","url":"https://gppolfinans.pl/","telephone":PHONE,"email":MAIL,
@@ -369,17 +368,13 @@ def index():
 <section class="hero" id="top" aria-labelledby="hero-title">
   <div class="hero__inner">
     <div>
-      <span class="eyebrow" data-rise style="--i:0">Doradztwo ubezpieczeniowe we Wrocławiu</span>
-      <h1 id="hero-title" data-rise style="--i:1">Jasne decyzje.<br>Osobista opieka.</h1>
-      <p class="hero__lead" data-rise style="--i:2">Dom, rodzina, firma, plany. Za każdą polisą stoją konkretne sprawy. Pomagamy uporządkować informacje, zrozumieć zakres ochrony i świadomie wybrać dalszy krok.</p>
-      <div class="hero__ctas" data-rise style="--i:3">
-        <a class="btn btn--primary" href="#kontakt">Umów rozmowę {ic("arrow")}</a>
-        <a class="btn btn--ghost" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} {PHONE_SHORT}</a>
-      </div>
-      <ul class="creds" data-rise style="--i:4">
-        <li>{ic("award")}Ponad 20 lat na rynku</li>
-        <li>{ic("layers")}Oferty kilku towarzystw</li>
-        <li>{ic("buoy")}Pomoc przy szkodzie</li>
+      <h1 id="hero-title" class="h1--long" data-rise style="--i:0">Doradztwo ubezpieczeniowe oparte na analizie i&nbsp;doświadczeniu</h1>
+      <p class="hero__lead" data-rise style="--i:1">Każdy Klient i jego potrzeby są inne, dlatego do ubezpieczeń podchodzimy indywidualnie. Pomagamy dobrać odpowiedni zakres ochrony, przedstawiamy dostępne rozwiązania i wspieramy w podejmowaniu świadomych decyzji. Bo dobre ubezpieczenie to coś więcej niż dokument i suma gwarancyjna – to przemyślana ochrona, poczucie bezpieczeństwa oraz pewność, że w ważnych momentach możesz liczyć na nasze wsparcie.</p>
+      <ul class="creds" data-rise style="--i:2">
+        <li>{ic("award")}30 lat na rynku</li>
+        <li>{ic("layers")}Szeroki wybór ubezpieczeń</li>
+        <li>{ic("user")}Indywidualne podejście</li>
+        <li>{ic("buoy")}Wsparcie przy szkodzie</li>
       </ul>
     </div>
     <figure class="hero__media" id="heroMedia">
@@ -392,13 +387,13 @@ def index():
 <section class="section areas tabbed" id="obszary" aria-labelledby="areas-title">
   <div class="wrap">
     <div class="head head--split">
-      <div style="display:grid;gap:1.1rem"><span class="eyebrow">Ubezpieczenia</span><h2 id="areas-title">Z czym możemy pomóc</h2></div>
-      <p>Sześć obszarów ochrony. Wybierz ten, który Cię dotyczy. Na każdej stronie znajdziesz pytania, od których zaczniemy rozmowę, i listę rzeczy do przygotowania.</p>
+      <div style="display:grid;gap:1.1rem"><span class="eyebrow">Ubezpieczenia</span><h2 id="areas-title">Znajdź ochronę dopasowaną do swoich potrzeb</h2></div>
+      <p>Oferujemy ubezpieczenia w różnych obszarach życia i działalności. Wybierz kategorię, która Cię interesuje, poznaj dostępne możliwości i sprawdź, jakich informacji potrzebujemy, aby przygotować odpowiednią ofertę dla Ciebie.</p>
     </div>
     <div class="areas__grid">
       <div>
         <ul class="idx" id="idx">{idx}</ul>
-        <div class="areas__foot"><p>Nie widzisz swojej sprawy na liście? Napisz, czego dotyczy. Jeśli to nie nasz obszar, powiemy to wprost.</p><a class="link-more" href="#kontakt" data-topic="Inne / jeszcze nie wiem"><span>Opisz swoją sytuację</span>{ic("arrow")}</a></div>
+        <div class="areas__foot"><p><strong>Nie znalazłeś rozwiązania, którego szukasz?</strong> Opowiedz nam, czego potrzebujesz. Przyjrzymy się Twojej sytuacji i sprawdzimy, co możemy Ci zaproponować.</p><a class="link-more" href="#kontakt" data-topic="Inne / jeszcze nie wiem"><span>Napisz do nas</span>{ic("arrow")}</a></div>
       </div>
       <div class="frame" id="frame">{frame}{cards}</div>
     </div>
@@ -422,12 +417,12 @@ def index():
 <section class="section process tabbed" id="proces" aria-labelledby="process-title">
   <div class="wrap">
     <div class="head head--split">
-      <div style="display:grid;gap:1.1rem"><span class="eyebrow">Jak pracujemy</span><h2 id="process-title">Cztery kroki do decyzji, którą rozumiesz</h2></div>
-      <p>Po rozmowie dostajesz podsumowanie: co sprawdziliśmy, z czego wynikają ustalenia i jaki jest następny krok. Możesz do niego wrócić przy kolejnym kontakcie.</p>
+      <div style="display:grid;gap:1.1rem"><span class="eyebrow">Nasze podejście</span><h2 id="process-title">Twoje potrzeby. Nasze doświadczenie. Wspólny wybór.</h2></div>
+      <p>Każdą współpracę opieramy na rozmowie, analizie potrzeb i dopasowaniu odpowiednich rozwiązań. Dbamy o to, aby wszystkie ustalenia były jasne i zrozumiałe, a Ty wiedział, jakie możliwości masz do wyboru i na co warto zwrócić uwagę.</p>
     </div>
     <div class="process__grid">
       <div class="ledger" id="ledger">
-        <div class="ledger__title"><strong>Twoje ustalenia</strong><span>Krok po kroku</span></div>
+        <div class="ledger__title"><strong>Nasza współpraca</strong><span>Krok po kroku</span></div>
         <ol class="steps">{steps_html}</ol>
       </div>
       <div class="photos" id="photos" aria-live="off">{photos}</div>
@@ -441,10 +436,10 @@ def index():
     <div>
       <span class="eyebrow">Pomoc przy szkodzie</span>
       <h2 id="claims-title" style="margin-top:1.1rem">Szkoda to zły moment na czytanie warunków polisy</h2>
-      <p>Zadzwoń, zanim zaczniesz działać sam. Pomożemy ustalić, co zgłosić, jakie dokumenty zebrać i jak rozmawiać z towarzystwem.</p>
+      <p>Zadzwoń do nas, a pomożemy Ci ustalić, jak zgłosić szkodę, jakie dokumenty przygotować i na co zwrócić uwagę w kontakcie z towarzystwem ubezpieczeniowym.</p>
       <div class="claims__ctas">
         <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} {PHONE_SHORT}</a>
-        <a class="btn btn--light" href="pomoc-przy-szkodzie.html">Co zrobić po szkodzie {ic("arrow")}</a>
+        <a class="btn btn--light" href="pomoc-przy-szkodzie.html">Pierwsze kroki po szkodzie {ic("arrow")}</a>
       </div>
     </div>
     <div class="slip">
@@ -464,13 +459,14 @@ def index():
     <div class="about__text">
       <span class="eyebrow">O nas</span>
       <h2 id="about-title">Polfinans Grupa Partnerska</h2>
-      <p>Jesteśmy multiagencją ubezpieczeniową z Wrocławia. Od ponad 20 lat doradzamy klientom indywidualnym, firmom i instytucjom. Współpracujemy z wiodącymi towarzystwami ubezpieczeniowymi, dlatego porównujemy oferty zamiast proponować jedną.</p>
-      <p>Pomagamy wybrać ubezpieczenie, zawrzeć umowę i przejść przez likwidację szkody. Każda sprawa ma u nas osobę, która ją prowadzi.</p>
+      <p><strong>Polfinans – Grupa Partnerska</strong> to multiagencja ubezpieczeniowa z Wrocławia, która łączy wieloletnie doświadczenie, profesjonalne doradztwo i indywidualne podejście do klienta. Od 30 lat działamy na polskim rynku, współpracując z wiodącymi towarzystwami ubezpieczeniowymi. Dzięki temu możemy porównywać szeroki wybór ofert i proponować rozwiązania dopasowane do potrzeb klientów indywidualnych, firm i instytucji.</p>
+      <p>Zapewniamy wsparcie na każdym etapie współpracy – od analizy potrzeb i wyboru odpowiedniego ubezpieczenia, przez zawarcie umowy, aż po pomoc w przypadku wystąpienia szkody i jej likwidacji. Dbamy o to, aby proponowane rozwiązania były zrozumiałe, odpowiednio dobrane i odpowiadały rzeczywistym potrzebom naszych klientów.</p>
+      <p>Stawiamy na rzetelność, wysoką jakość obsługi i partnerskie relacje. Wierzymy, że dobre ubezpieczenie to coś więcej niż polisa – to przemyślana ochrona, poczucie bezpieczeństwa i pewność, że w ważnych momentach można liczyć na nasze wsparcie.</p>
       <ul class="values">
-        <li class="value">{ic("search")}<div><strong>Jakość decyzji</strong><span>Wyjaśniamy, z czego wynika wybór, żebyś mógł go opisać własnymi słowami.</span></div></li>
-        <li class="value">{ic("user")}<div><strong>Osobista odpowiedzialność</strong><span>Wiesz, kto prowadzi Twoją sprawę i jak się z nim skontaktować.</span></div></li>
-        <li class="value">{ic("refresh")}<div><strong>Ciągłość</strong><span>Wracamy do ustaleń, gdy zmienia się Twoja sytuacja.</span></div></li>
-        <li class="value">{ic("folder")}<div><strong>Porządek w dokumentach</strong><span>Ustalenia są zapisane. Wiesz, do czego wrócić.</span></div></li>
+        <li class="value">{ic("search")}<div><strong>Świadome decyzje</strong><span>Wyjaśniamy różnice między ofertami i uzasadniamy nasze rekomendacje, abyś wiedział, co wybierasz i dlaczego.</span></div></li>
+        <li class="value">{ic("user")}<div><strong>Indywidualne podejście</strong><span>Wiesz, kto zajmuje się Twoją sprawą i do kogo możesz zwrócić się z pytaniami.</span></div></li>
+        <li class="value">{ic("buoy")}<div><strong>Stałe wsparcie</strong><span>Pozostajemy do Twojej dyspozycji również wtedy, gdy wystąpi szkoda, zmienią się Twoje potrzeby lub sytuacja życiowa.</span></div></li>
+        <li class="value">{ic("refresh")}<div><strong>Ciągłość ochrony</strong><span>Pamiętamy o kończących się polisach i przypominamy o wznowieniach, pomagając Ci zachować ciągłość ochrony.</span></div></li>
       </ul>
     </div>
   </div>
@@ -496,19 +492,19 @@ def subpage(a, claims=False):
     if claims:
         first = f'''<section class="section sub sub--first" aria-labelledby="first-title">
   <div class="wrap cols">
-    <div class="cols__intro"><span class="eyebrow">Zaraz po zdarzeniu</span><h2 id="first-title">Co zrobić od razu</h2><p>Kolejność ma znaczenie. Te kroki pomagają ograniczyć szkodę i nie stracić prawa do odszkodowania.</p></div>
+    <div class="cols__intro"><span class="eyebrow">Zaraz po zdarzeniu</span><h2 id="first-title">Pierwsze kroki po szkodzie</h2><p>Kolejność działań ma znaczenie. Odpowiednie postępowanie może pomóc ograniczyć rozmiar szkody i sprawniej przejść przez proces jej zgłoszenia oraz likwidacji.</p></div>
     <ol class="qs">{"".join(f"<li><div><strong>{t}</strong><span>{d}</span></div></li>" for t, d in a["steps"])}</ol>
   </div>
 </section>'''
-        prep_title, prep_lead = "Co przygotować do zgłoszenia", "Zaznacz to, co już masz. Lista zostaje tylko w Twojej przeglądarce."
+        prep_title, prep_lead = "Co warto przygotować do zgłoszenia szkody?", "Zanim zgłosisz szkodę, przygotuj dostępne informacje i dokumenty. Nie musisz mieć wszystkiego od razu – w zależności od rodzaju zdarzenia i wymagań towarzystwa ubezpieczeniowego lista może się różnić."
         prep_left = f'<div class="cols__intro"><span class="eyebrow">Dokumenty</span><h2 id="prep-title">{prep_title}</h2><p>{prep_lead}</p></div>'
-        prep_right = f'<div><ul class="checklist">{checklist(a["prep"])}</ul><div class="prep__meter"><span data-count>Gotowe: 0 z {len(a["prep"])}</span><b aria-hidden="true"></b></div></div>'
+        prep_right = f'<div><p class="checklist__hint">Sprawdź, które informacje i dokumenty masz już przygotowane</p><ul class="checklist">{checklist(a["prep"])}</ul><div class="prep__meter"><span data-count>Gotowe: 0 z {len(a["prep"])}</span><b aria-hidden="true"></b></div></div>'
         prep_section = f'<section class="section prep tabbed" aria-labelledby="prep-title"><div class="wrap cols">{prep_left}{prep_right}</div></section>'
-        band_t, band_p = "Szkoda się wydarzyła? Zadzwoń teraz", "Ustalimy, co zgłosić i w jakim terminie. Pomożemy zebrać dokumenty i przygotować zgłoszenie."
+        band_t, band_p = "Potrzebujesz wsparcia? Skontaktuj się z nami.", "Pomożemy Ci ustalić, co i w jakim terminie należy zgłosić. Podpowiemy, jakie dokumenty przygotować i wesprzemy Cię w procesie zgłoszenia szkody."
     else:
         first = f'''<section class="section sub sub--first" aria-labelledby="when-title">
   <div class="wrap cols">
-    <div class="cols__intro"><span class="eyebrow">{a["name"]}</span><h2 id="when-title">Kiedy warto porozmawiać</h2><p>Najczęściej zgłaszają się do nas osoby w jednej z tych sytuacji.</p></div>
+    <div class="cols__intro"><span class="eyebrow">{a["name"]}</span><h2 id="when-title">Dobrze dobrana ochrona zaczyna się od potrzeb</h2><p>{a.get("when_lead","Najczęściej zgłaszają się do nas osoby w jednej z tych sytuacji.")}</p></div>
     <ul class="ticks">{"".join(f"<li>{ic('check')}<span>{t}</span></li>" for t in a["when"])}</ul>
   </div>
 </section>'''
@@ -521,6 +517,10 @@ def subpage(a, claims=False):
   </div>
 </section>'''
         band_t, band_p = f"Porozmawiajmy o Twojej sprawie", "Przygotujemy porównanie i powiemy, który wariant polecamy i dlaczego."
+    hero_ctas = f'''<div class="hero__ctas" data-rise style="--i:3">
+        <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń: {PHONE_SHORT}</a>
+        <a class="btn btn--ghost" href="#kontakt">Napisz do nas</a>
+      </div>''' if claims else ""
     return head(f'{a["seo"]} | Polfinans', a["lead"][:155], f'{a["slug"]}.html') + nav(False, "szkoda" if claims else "obszary") + f'''
 <main id="main">
 <section class="hero page-hero" id="top" aria-labelledby="hero-title">
@@ -529,10 +529,7 @@ def subpage(a, claims=False):
       <ol class="crumbs" data-rise style="--i:0"><li><a href="index.html">Polfinans</a></li><li><a href="index.html#{"szkoda" if claims else "obszary"}">{"Pomoc" if claims else "Ubezpieczenia"}</a></li><li aria-current="page">{a["name"]}</li></ol>
       <h1 id="hero-title" data-rise style="--i:1">{a["title"]}</h1>
       <p class="hero__lead" data-rise style="--i:2">{a["lead"]}</p>
-      <div class="hero__ctas" data-rise style="--i:3">
-        <a class="btn btn--primary" href="{"tel:" + PHONE_TEL if claims else "#kontakt"}">{(ic("phone","i-phone") + " Zadzwoń: " + PHONE_SHORT) if claims else ("Umów rozmowę " + ic("arrow"))}</a>
-        <a class="btn btn--ghost" href="{"#kontakt" if claims else "tel:" + PHONE_TEL}">{"Napisz do nas" if claims else ic("phone","i-phone") + " " + PHONE_SHORT}</a>
-      </div>
+      {hero_ctas}
     </div>
     <figure class="hero__media" id="heroMedia">
       <div class="hero__frame">{picture(a["img"], a["alt"], eager=True)}</div>
@@ -554,7 +551,7 @@ def subpage(a, claims=False):
 </section>
 <section class="section sub" aria-labelledby="faq-title">
   <div class="wrap cols">
-    <div class="cols__intro"><span class="eyebrow">Pytania</span><h2 id="faq-title">Często pytacie</h2><p>Odpowiedzi są ogólne. Szczegóły zależą od warunków konkretnego towarzystwa i sprawdzamy je przy Twojej ofercie.</p></div>
+    <div class="cols__intro"><span class="eyebrow">Pytania</span><h2 id="faq-title">Często zadawane pytania</h2><p>{a.get("faq_lead","Odpowiedzi są ogólne. Szczegóły zależą od warunków konkretnego towarzystwa i sprawdzamy je przy Twojej ofercie.")}</p></div>
     <div class="faq">{faq_html(a["faq"])}</div>
   </div>
 </section>

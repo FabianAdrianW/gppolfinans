@@ -497,3 +497,9 @@ ul{margin:0}
   .step__bar{display:none}
 }
 @media (max-width:959px) and (prefers-reduced-motion:reduce){.unfold{grid-template-rows:1fr}.reveal{clip-path:none}.reveal img{transform:none;opacity:1}}
+/* Poprawki klienta 2026-11 */
+.hero h1.h1--long{font-size:clamp(2.2rem,1.1rem + 2.7vw,4.1rem);line-height:1.06;max-width:18ch}
+.hero__lead{text-wrap:pretty}
+.areas__foot strong{display:block;margin-bottom:.35rem;font:500 1.25rem/1.25 var(--serif);color:#fff}
+.checklist__hint{margin:0 0 1rem;font-size:.95rem;color:var(--muted)}
+.page-hero{padding-bottom:clamp(2.5rem,5vw,4.5rem)}
