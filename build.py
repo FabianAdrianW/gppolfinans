@@ -7,6 +7,8 @@ PHONE = "+48 504 031 330"; PHONE_TEL = "+48504031330"; PHONE_SHORT = "504 031 33
 MAIL = "gppolfinans@gmail.com"
 ADDR1 = "ul. Metalowców 9, pok. 110"; ADDR2 = "54-156 Wrocław"
 MAPS = "https://www.google.com/maps/search/?api=1&query=Metalowc%C3%B3w+9+54-156+Wroc%C5%82aw"
+FIRM = "Anna Wojda „POLFINANS”"; NIP = "898-132-68-85"; REGON = "020499082"; KNF_NO = "11200056/A"
+KNF_URL = "https://rpu.knf.gov.pl/search/agent/11200056%2FA/353623"
 WEB3FORMS_KEY = "TODO_WEB3FORMS_KEY"   # TODO: klucz z web3forms.com założony na gppolfinans@gmail.com
 
 ICONS = {
@@ -220,7 +222,7 @@ def head(title, desc, canonical, extra=""):
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B2E2E'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='21' text-anchor='middle' fill='%23F7F4EF'%3Ep%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1794007677">
+<link rel="stylesheet" href="styles.css?v=1794008113">
 {extra}</head>
 <body>
 <a class="skip" href="#main">Przejdź do treści</a>
@@ -300,16 +302,21 @@ def contact(topic=""):
 </section>
 '''
 
-def footer(home=True):
+def footer(home=True, has_contact=True):
     p = "" if home else "index.html"
+    k = "#kontakt" if has_contact else "index.html#kontakt"
     areas = "".join(f'<li><a href="{a["slug"]}.html">{a["name"]}</a></li>' for a in AREAS)
     return f'''<footer class="footer">
   <div class="wrap">
+    <div class="footer__cta">
+      <p class="footer__ask">Sprawdź, czy Twoje ubezpieczenie naprawdę Cię chroni.</p>
+      <a class="btn btn--primary" href="{k}" data-topic="Analiza obecnych polis">Umów analizę polisy {ic("arrow")}</a>
+    </div>
     <div class="footer__grid">
       <div>
         <a class="logo" href="{p or '#top'}" aria-label="Polfinans, strona główna">{LOGO}</a>
-        <p>Bezpieczeństwo to kwestia wyboru. Dobre decyzje to spokojna przyszłość.</p>
-        <!-- TODO: numer wpisu w rejestrze pośredników ubezpieczeniowych KNF (RPU) oraz NIP -->
+        <p class="footer__motto">Bezpieczeństwo to kwestia wyboru. Dobre decyzje to spokojna przyszłość.</p>
+        <p class="footer__promise">{ic("shield")}<span>Twoje bezpieczeństwo to nasz priorytet.</span></p>
       </div>
       <div><h3>Ubezpieczenia</h3><ul>{areas}<li><a href="pomoc-przy-szkodzie.html">Pomoc przy szkodzie</a></li></ul></div>
       <div><h3>Kontakt</h3><ul>
@@ -318,6 +325,7 @@ def footer(home=True):
         <li><a href="{MAPS}" target="_blank" rel="noopener">{ADDR1}, {ADDR2}</a></li>
       </ul></div>
     </div>
+    <p class="footer__legal">{FIRM} · NIP {NIP} · REGON {REGON} · Agent ubezpieczeniowy wpisany do rejestru pośredników ubezpieczeniowych KNF pod nr <a href="{KNF_URL}" target="_blank" rel="noopener">{KNF_NO}</a></p>
     <div class="footer__bottom">
       <span>© 2026 Polfinans Grupa Partnerska</span>
       <span><a href="prywatnosc.html">Polityka prywatności</a></span>
@@ -329,7 +337,7 @@ def footer(home=True):
   <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń</a>
   <a class="btn btn--ghost" href="#kontakt">Napisz</a>
 </div>
-<script src="main.js?v=1794007677" defer></script>
+<script src="main.js?v=1794008113" defer></script>
 </body>
 </html>
 '''
@@ -572,9 +580,8 @@ def privacy():
   <div class="wrap legal">
     <span class="eyebrow">Prywatność</span>
     <h1 style="font-size:clamp(2.2rem,1.4rem + 3vw,3.6rem);margin-top:1rem">Polityka prywatności</h1>
-    <!-- TODO: pełna nazwa administratora, forma prawna, NIP/REGON do uzupełnienia przez klienta -->
     <h2>Administrator danych</h2>
-    <p>Administratorem danych podanych w formularzu jest Polfinans Grupa Partnerska, {ADDR1}, {ADDR2}. Kontakt w sprawie danych: <a href="mailto:{MAIL}">{MAIL}</a>, tel. {PHONE}.</p>
+    <p>Administratorem danych podanych w formularzu jest {FIRM} (Polfinans Grupa Partnerska), {ADDR1}, {ADDR2}, NIP {NIP}, REGON {REGON}, agent ubezpieczeniowy wpisany do rejestru pośredników ubezpieczeniowych KNF pod nr {KNF_NO}. Kontakt w sprawie danych: <a href="mailto:{MAIL}">{MAIL}</a>, tel. {PHONE}.</p>
     <h2>Jakie dane i po co</h2>
     <p>Przetwarzamy dane, które sam wpiszesz w formularzu: imię i nazwisko, telefon lub e-mail i treść wiadomości. Używamy ich tylko po to, żeby odpowiedzieć i umówić rozmowę. Podstawą jest Twoja zgoda (art. 6 ust. 1 lit. a RODO) oraz działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO).</p>
     <h2>Komu je przekazujemy</h2>
@@ -588,7 +595,7 @@ def privacy():
   </div>
 </section>
 </main>
-''' + footer(False)
+''' + footer(False, has_contact=False)
 
 def main():
     (ROOT / "index.html").write_text(index(), encoding="utf-8")
