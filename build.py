@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generates the Polfinans site: index + 6 insurance areas + claims help + privacy. Run: python3 build.py"""
-import json, pathlib
+import json, pathlib, re
 ROOT = pathlib.Path(__file__).parent
 
 PHONE = "+48 504 031 330"; PHONE_TEL = "+48504031330"; PHONE_SHORT = "504 031 330"
@@ -43,11 +43,14 @@ SPRITE = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"
     f'<symbol id="i-{k}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{v}</symbol>' for k, v in ICONS.items()) + "</svg>"
 
 # ---------------- Areas ----------------
+FAQ_LEAD = "Poniższe odpowiedzi mają charakter ogólny. Szczegółowe zasady postępowania zależą od warunków ubezpieczenia i rodzaju zdarzenia, dlatego każdą sytuację analizujemy indywidualnie."
+
 AREAS = [
  dict(slug="dom-i-majatek", icon="home", img="area-dom", name="Dom i majątek", topic="Dom i majątek",
    card="Mieszkanie, dom, wyposażenie i OC w życiu prywatnym.",
    title="Ubezpieczenie domu i mieszkania", seo="Ubezpieczenie domu i mieszkania, Wrocław",
    lead="Dom to nie tylko mury i wyposażenie, ale również przedmioty i wspomnienia, które mają dla Ciebie szczególną wartość. Pomożemy dobrać odpowiedni zakres ochrony, uwzględniając wartość nieruchomości, jej wyposażenia oraz odpowiedzialność cywilną wobec innych osób. Sprawdzimy również, czy suma ubezpieczenia odpowiada aktualnej wartości Twojego majątku.",
+   note=("Wartość, którą budujesz. Ochrona, którą wybierasz.", "Zadbaj o właściwe zabezpieczenie swojego majątku."),
    when_lead="Zakup nieruchomości, wynajem, remont czy zmiana dotychczasowej polisy – każda z tych sytuacji to dobry moment, aby przyjrzeć się zakresowi ubezpieczenia i dopasować go do aktualnych potrzeb.",
    alt="Otwarte drzwi wejściowe domu, na komodzie burgundowa teczka i klucze",
    when=["Kupujesz mieszkanie albo dom na kredyt, a bank wymaga polisy.",
@@ -55,124 +58,154 @@ AREAS = [
          "Masz polisę od lat i nie pamiętasz, co dokładnie obejmuje.",
          "Wynajmujesz mieszkanie lub udostępniasz swoją nieruchomość najemcom.",
          "Kończy się Twoje ubezpieczenie i chcesz porównać dostępne oferty."],
-   qs=[("Co chcesz chronić?","Mury, stałe elementy, wyposażenie, ruchomości, budynki gospodarcze na działce."),
-       ("Od jakich zdarzeń?","Lista nazwanych ryzyk albo formuła wszystkich ryzyk, z wyłączeniami zapisanymi w warunkach."),
-       ("Jaka suma ubezpieczenia?","Wartość odtworzeniowa czy rzeczywista i ile kosztowałaby dziś odbudowa."),
-       ("Czy potrzebujesz OC w życiu prywatnym?","Zalanie sąsiada, szkoda wyrządzona przez dziecko albo psa."),
-       ("Jakiej pomocy potrzebujesz na miejscu?","Assistance domowe: hydraulik, elektryk, ślusarz.")],
-   prep=["Adres, rok budowy, powierzchnia, rodzaj konstrukcji i dachu",
-         "Obecna polisa, jeśli ją masz (zdjęcie lub PDF wystarczy)",
-         "Przybliżona wartość wyposażenia i droższych rzeczy",
-         "Informacja z banku, jeśli polisa ma być scedowana na kredyt",
-         "Zabezpieczenia: drzwi, zamki, alarm, monitoring"],
-   faq=[("Czym różni się wartość odtworzeniowa od rzeczywistej?","Wartość odtworzeniowa to koszt odbudowy albo zakupu nowej rzeczy tego samego rodzaju. Wartość rzeczywista uwzględnia zużycie, więc odszkodowanie może być niższe. W rozmowie sprawdzimy, jak liczy to konkretna oferta."),
-        ("Czy polisa wymagana przez bank wystarczy?","Polisa do kredytu często chroni głównie mury, bo to one zabezpieczają bank. Wyposażenie i OC w życiu prywatnym zwykle trzeba dobrać osobno."),
-        ("Czy da się ubezpieczyć dom w budowie?","Towarzystwa mają do tego osobne warunki. Zakres zależy od etapu prac i od tego, czy budynek jest już zamknięty.")]),
+   qs_lead="Aby przygotować ofertę dopasowaną do Twojej nieruchomości, potrzebujemy kilku podstawowych informacji. Nie musisz znać wszystkich odpowiedzi – w razie potrzeby pomożemy Ci je ustalić.",
+   qs=[("Co chcesz chronić?","Mury, elementy stałe, wyposażenie, ruchomości domowe oraz budynki gospodarcze znajdujące się na posesji."),
+       ("Jak szeroka powinna być ochrona?","Rekomendujemy formułę ALL RISK, która zapewnia szeroki zakres ochrony od nagłych i nieprzewidzianych zdarzeń, z uwzględnieniem wyłączeń określonych w OWU."),
+       ("Na jaką wartość ubezpieczyć nieruchomość?","Ustalimy odpowiednią sumę ubezpieczenia, uwzględniając wartość odtworzeniową lub rzeczywistą nieruchomości oraz aktualne koszty jej odbudowy."),
+       ("Czy potrzebujesz OC w życiu prywatnym?","To dodatkowa ochrona na wypadek szkód wyrządzonych innym osobom, np. zalania mieszkania sąsiada czy szkody spowodowanej przez dziecko lub zwierzę domowe."),
+       ("Z jakiej dodatkowej pomocy możesz skorzystać?","Rozbudowany Assistance to praktyczne wsparcie w codziennych i nagłych sytuacjach. Może obejmować m.in. pomoc hydraulika, elektryka czy ślusarza, wizyty lekarskie, konsultacje specjalistyczne oraz inne usługi – w zależności od oferty towarzystwa ubezpieczeniowego i wybranego wariantu.")],
+   prep=["Adres nieruchomości, rok budowy, powierzchnię oraz rodzaj konstrukcji budynku i dachu.",
+         "Obecną polisę, jeśli ją posiadasz – wystarczy zdjęcie lub plik PDF.",
+         "Przybliżoną wartość wyposażenia i cenniejszych przedmiotów.",
+         "Informacje dotyczące kredytu i banku, jeśli ubezpieczenie ma stanowić zabezpieczenie kredytu (cesja na bank).",
+         "Rodzaj zastosowanych zabezpieczeń, np. drzwi antywłamaniowe, zamki, alarm czy monitoring.",
+         "Dodatkowe instalacje, takie jak fotowoltaika, pompa ciepła czy klimatyzacja.",
+         "Informację o zabudowaniach na posesji, np. garażu, budynku gospodarczym czy altanie.",
+         "Sposób użytkowania nieruchomości – czy jest zamieszkana na stałe, wynajmowana, użytkowana sezonowo czy pozostaje niezamieszkana."],
+   faq=[("Czym różni się wartość odtworzeniowa od rzeczywistej?","Wartość odtworzeniowa oznacza koszt odbudowy nieruchomości lub zakupu nowej rzeczy tego samego rodzaju i o podobnych parametrach. Wartość rzeczywista uwzględnia również stopień zużycia, co może oznaczać niższe odszkodowanie. Pomożemy Ci ustalić, która metoda wyceny będzie odpowiednia dla Twojej nieruchomości i wyposażenia."),
+        ("Czy polisa wymagana przez bank wystarczy?","Niekoniecznie. Polisa wymagana przez bank zabezpiecza przede wszystkim interesy kredytodawcy i najczęściej obejmuje mury nieruchomości. Warto sprawdzić, czy zapewnia również ochronę wyposażenia, elementów stałych i OC w życiu prywatnym. W razie potrzeby pomożemy rozszerzyć zakres ubezpieczenia."),
+        ("Czy da się ubezpieczyć dom w budowie?","Tak. Towarzystwa oferują ubezpieczenia przeznaczone dla nieruchomości w trakcie budowy. Zakres ochrony i warunki zawarcia polisy zależą m.in. od etapu prac, stanu zaawansowania budowy oraz zabezpieczenia obiektu.")]),
  dict(slug="samochod", icon="car", img="area-samochod", name="Samochód", topic="Samochód",
    card="OC, AC, assistance i to, jak naprawdę używasz auta.",
    title="Ubezpieczenie samochodu", seo="Ubezpieczenie samochodu OC i AC, Wrocław",
-   lead="OC jest obowiązkowe, reszta zależy od tego, jak korzystasz z auta. Porównamy oferty kilku towarzystw przy tym samym zakresie, żeby ceny dało się uczciwie zestawić.",
+   lead="OC jest obowiązkowe, natomiast zakres ochrony może być znacznie szerszy – w zależności od Twoich potrzeb i sposobu użytkowania auta. Porównamy oferty kilku towarzystw, aby pomóc Ci wybrać najlepsze rozwiązanie.",
+   note=("Właściwa ochrona zaczyna się od dobrego wyboru.", ""),
+   when_lead="Różne sytuacje na drodze wymagają różnego zakresu ochrony.",
    alt="Mężczyzna wkłada torbę do bagażnika samochodu przed domem",
-   when=["Kupujesz samochód, nowy albo używany.",
-         "Zbliża się koniec obecnej polisy OC lub AC.",
-         "Auto jest w leasingu albo kupione na kredyt.",
-         "Zmieniasz sposób używania auta, na przykład zaczynasz jeździć służbowo albo za granicę."],
-   qs=[("Kto i jak jeździ?","Kierowcy, ich wiek, roczny przebieg, miejsce parkowania."),
-       ("Czy AC ma sens przy tym aucie?","Wiek i wartość samochodu zestawione ze składką i udziałem własnym."),
-       ("Jak będzie liczone odszkodowanie?","Wariant warsztatowy albo kosztorysowy, części oryginalne albo zamienniki."),
-       ("Jakie assistance?","Holowanie, na jaki dystans, w kraju i za granicą, auto zastępcze."),
-       ("Czy potrzebujesz dodatków?","NNW, szyby, ochrona zniżek. Warto wiedzieć, co dają, zanim się je dokupi.")],
-   prep=["Dowód rejestracyjny: marka, model, rok produkcji, VIN",
-         "Obecna polisa OC lub AC",
-         "Data urodzenia i rok uzyskania prawa jazdy kierowców",
-         "Szkody z ostatnich lat, jeśli były",
-         "Przybliżony roczny przebieg"],
-   faq=[("Czy OC przedłuża się automatycznie?","Tak. Jeśli nie wypowiesz umowy, OC zawarte na 12 miesięcy przedłuża się na kolejny rok. Dlatego dobrze jest porównać oferty przed końcem okresu."),
-        ("Co z OC przy zakupie używanego auta?","Polisa poprzedniego właściciela przechodzi na Ciebie i obowiązuje do końca okresu. Możesz ją wypowiedzieć i zawrzeć własną."),
-        ("Czym różni się wariant warsztatowy od kosztorysowego?","W wariancie warsztatowym auto jest naprawiane w serwisie, a towarzystwo płaci za faktury. W kosztorysowym dostajesz pieniądze według wyliczenia, zwykle niższe niż koszt naprawy w serwisie.")]),
+   when=["Kupujesz samochód – nowy lub używany.",
+         "Zbliża się termin zakończenia obecnej polisy OC lub AC.",
+         "Finansujesz samochód leasingiem lub kredytem.",
+         "Zmienia się sposób użytkowania auta, np. zaczynasz wykorzystywać je do celów służbowych lub częściej podróżujesz za granicę."],
+   qs_lead="Aby przygotować odpowiednią ofertę, potrzebujemy kilku informacji, które pozwolą nam dopasować zakres ubezpieczenia do Twojego samochodu i sposobu jego użytkowania.",
+   qs=[("Kto i w jaki sposób korzysta z samochodu?","Uwzględnimy wiek kierowców, przebieg oraz sposób użytkowania auta."),
+       ("Czy warto rozszerzyć ochronę o AC?","Porównamy wartość i wiek samochodu z kosztem ubezpieczenia, zakresem ochrony oraz ewentualnym udziałem własnym w szkodzie."),
+       ("Na jakich zasadach zostanie wypłacone odszkodowanie?","Sprawdzimy sposób likwidacji szkody – wariant serwisowy lub kosztorysowy, a także zasady stosowania części oryginalnych i zamiennych."),
+       ("Jakiego Assistance potrzebujesz?","Ustalimy zakres pomocy na drodze, m.in. warunki i limit holowania w Polsce i za granicą oraz możliwość skorzystania z samochodu zastępczego."),
+       ("Czy przydadzą Ci się dodatkowe ubezpieczenia?","NNW, ubezpieczenie szyb czy ochrona zniżek mogą stanowić wartościowe uzupełnienie polisy. Wyjaśnimy, co obejmują i kiedy warto z nich skorzystać.")],
+   prep=["<strong>Dane właściciela pojazdu</strong> – imię, nazwisko, adres zamieszkania; podstawowe dane potrzebne do przygotowania kalkulacji.",
+         "<strong>Dowód rejestracyjny</strong> – marka, model, rok produkcji i numer VIN. Najlepiej przygotować zdjęcie lub skan obu stron dokumentu.",
+         "<strong>Obecną polisę OC lub AC</strong>, jeśli ją posiadasz.",
+         "<strong>Datę urodzenia kierowcy oraz rok uzyskania prawa jazdy.</strong>",
+         "<strong>Informacje o szkodach z ostatnich lat</strong>, jeśli występowały.",
+         "<strong>Aktualny przebieg pojazdu.</strong>"],
+   faq=[("Czy OC przedłuża się automatycznie?","Obowiązkowe OC zawarte na 12 miesięcy co do zasady przedłuża się automatycznie na kolejny rok, jeśli nie zostanie wypowiedziane najpóźniej na jeden dzień przed końcem umowy. Są jednak wyjątki, np. polisa poprzedniego właściciela kupionego samochodu nie przedłuża się automatycznie. Warto więc sprawdzić termin końca ochrony i porównać dostępne oferty."),
+        ("Co z OC przy zakupie używanego auta?","Polisa OC poprzedniego właściciela przechodzi na nowego właściciela i obowiązuje do końca okresu, na jaki została zawarta. Możesz z niej korzystać albo ją wypowiedzieć i zawrzeć własną umowę. Pamiętaj, że ubezpieczyciel może dokonać ponownej kalkulacji składki."),
+        ("Czym różni się wariant warsztatowy od kosztorysowego?","W wariancie warsztatowym naprawa rozliczana jest na podstawie faktur za wykonane prace i użyte części, zgodnie z warunkami polisy. W wariancie kosztorysowym ubezpieczyciel ustala wysokość odszkodowania na podstawie własnej wyceny, a środki otrzymujesz bezpośrednio na konto. Kwota może nie pokryć pełnego kosztu naprawy w wybranym serwisie.")]),
  dict(slug="zycie", icon="heart", img="area-zycie", name="Życie", topic="Życie",
    card="Bliscy, kredyt i zobowiązania, które zostają na lata.",
    title="Ubezpieczenie na życie", seo="Ubezpieczenie na życie, Wrocław",
-   lead="Ta polisa jest dla ludzi, którzy na Tobie polegają, i na zobowiązania, które zostają na lata. Pomożemy dobrać sumę i zakres do Twojej rodziny, kredytu i planów.",
+   lead="Ta polisa jest dla ludzi, którzy na Tobie polegają,<br> i na zobowiązania, które zostają na lata.<br> Pomożemy dobrać sumę i zakres do Twojej rodziny, kredytu i planów.",
+   note=("Zabezpiecz dziś to, co ważne jutro.", "Z myślą o tych, którzy są dla Ciebie najważniejsi."),
+   when_lead="W życiu pojawiają się momenty, w których warto pomyśleć o dodatkowym zabezpieczeniu.<br><br>Ubezpieczenie na życie warto rozważyć szczególnie wtedy, gdy:",
    alt="Rodzina przygotowuje razem posiłek w kuchni",
-   when=["Zakładasz rodzinę albo rodzi się dziecko.",
-         "Bierzesz kredyt hipoteczny.",
-         "Prowadzisz firmę, a bliscy zależą od Twoich dochodów.",
-         "Masz polisę grupową z pracy i nie wiesz, czy wystarczy."],
-   qs=[("Kogo ma chronić polisa?","Partnera, dzieci, wspólnika, bank."),
-       ("Jaka suma ma sens?","Ile potrzebowaliby bliscy, żeby spłacić zobowiązania i utrzymać się przez kilka lat."),
-       ("Jakie ryzyka oprócz śmierci?","Poważne zachorowanie, niezdolność do pracy, pobyt w szpitalu."),
-       ("Na jak długo?","Do spłaty kredytu, do usamodzielnienia dzieci, do emerytury."),
-       ("Polisa indywidualna czy grupowa?","Co daje ubezpieczenie z pracy i co się z nim dzieje przy zmianie pracodawcy.")],
-   prep=["Wysokość i okres spłaty kredytów",
-         "Osoby, które chcesz zabezpieczyć",
-         "Obecne polisy, także grupowe z pracy",
-         "Podstawowe informacje o zdrowiu, o które zapyta ankieta medyczna"],
-   faq=[("Czym różni się polisa indywidualna od grupowej?","Grupowa jest zwykle związana z pracodawcą i może się skończyć razem z zatrudnieniem. Indywidualna należy do Ciebie, a warunki ustalasz bezpośrednio z towarzystwem."),
-        ("Czy polisę można scedować na bank?","Tak, przy kredycie hipotecznym bank często o to prosi. W razie śmierci świadczenie w pierwszej kolejności spłaca wtedy kredyt."),
-        ("Czy trzeba przechodzić badania?","To zależy od towarzystwa, wieku i sumy ubezpieczenia. Często wystarcza ankieta medyczna.")]),
+   when=["Masz rodzinę i chcesz zapewnić bliskim zabezpieczenie finansowe.",
+         "Planujesz zakup mieszkania lub spłacasz kredyt hipoteczny.",
+         "Twoje dochody stanowią ważną część domowego budżetu.",
+         "Prowadzisz własną firmę i odpowiadasz nie tylko za siebie, ale również za jej zobowiązania.",
+         "Zmieniasz pracę i tracisz dotychczasowe ubezpieczenie grupowe.",
+         "Chcesz zabezpieczyć się finansowo na wypadek poważnej choroby lub długotrwałego leczenia.",
+         "Masz już polisę, ale nie wiesz, czy jej suma i zakres nadal odpowiadają Twojej sytuacji."],
+   qs_lead="Aby przygotować odpowiednią ofertę, potrzebujemy kilku informacji, które pozwolą nam dopasować sumę ubezpieczenia i zakres ochrony do Twojej sytuacji, potrzeb oraz planów na przyszłość.",
+   qs=[("Kogo chcesz zabezpieczyć?","Partnera, dzieci, innych bliskich, a może również wspólnika lub firmę? Warto określić, kto powinien otrzymać wsparcie finansowe w razie Twojej śmierci."),
+       ("Jaka suma ubezpieczenia będzie odpowiednia?","Powinna uwzględniać wysokość zobowiązań, potrzeby rodziny i środki, które pozwolą bliskim utrzymać dotychczasowy poziom życia przez określony czas."),
+       ("Jakie sytuacje powinna obejmować ochrona?","Oprócz śmierci warto rozważyć poważne zachorowanie, niezdolność do pracy, trwały uszczerbek na zdrowiu czy pobyt w szpitalu."),
+       ("Jak długo potrzebujesz ochrony?","Może to być okres spłaty kredytu, czas do usamodzielnienia się dzieci lub dłuższy okres, obejmujący również lata przed emeryturą."),
+       ("Polisa indywidualna czy grupowa?","Ubezpieczenie grupowe z pracy może być dobrym rozwiązaniem, ale warto sprawdzić jego zakres, sumy ubezpieczenia i możliwość kontynuacji po zmianie pracodawcy. Polisę indywidualną można natomiast dopasować do własnych potrzeb i zobowiązań.")],
+   prep=["Podstawowe dane osobowe, w tym wiek.",
+         "Informacje o rodzinie i osobach, które chcesz zabezpieczyć finansowo.",
+         "Wysokość kredytów i innych zobowiązań oraz okres pozostały do ich spłaty.",
+         "Informacje o obecnych ubezpieczeniach na życie, również grupowych z pracy.",
+         "Ogólne informacje o stanie zdrowia i historii leczenia – zgodnie z pytaniami w ankiecie medycznej ubezpieczyciela.",
+         "Twoje oczekiwania – czy zależy Ci przede wszystkim na zabezpieczeniu bliskich, ochronie na wypadek poważnej choroby, czy również na dodatkowych świadczeniach."],
+   faq=[("Czym różni się polisa indywidualna od grupowej?","Ubezpieczenie grupowe jest zazwyczaj oferowane przez pracodawcę i zapewnia ochronę na określonych warunkach. Może jednak wygasnąć po zakończeniu zatrudnienia. Polisa indywidualna jest zawierana bezpośrednio z ubezpieczycielem, a jej zakres i sumę ubezpieczenia można dopasować do własnych potrzeb."),
+        ("Czy polisę można scedować na bank?","Tak. Przy kredycie hipotecznym bank może wymagać cesji praw z polisy na życie. Oznacza to, że w razie śmierci ubezpieczonego bank może otrzymać świadczenie do wysokości pozostałego zadłużenia, zgodnie z warunkami cesji. Ewentualna nadwyżka może przypaść uprawnionym osobom."),
+        ("Czy przed zawarciem polisy trzeba przechodzić badania lekarskie?","Nie zawsze. W wielu przypadkach wystarczy wypełnienie ankiety medycznej dotyczącej stanu zdrowia i historii leczenia. Przy wyższych sumach ubezpieczenia, określonym wieku lub wskazaniach wynikających z ankiety ubezpieczyciel może jednak zlecić dodatkowe badania lub konsultacje.")]),
  dict(slug="podroze", icon="plane", img="area-podroze", name="Podróże", topic="Podróże",
    card="Urlop, narty, praca za granicą. Leczenie, bagaż, rezygnacja.",
    title="Ubezpieczenie turystyczne", seo="Ubezpieczenie turystyczne na wyjazd, Wrocław",
-   lead="Urlop, narty, praca za granicą. Ustalimy, dokąd jedziesz i co będziesz robić, i dobierzemy zakres, który zadziała na miejscu.",
+   lead="Urlop, wyjazd na narty, a może praca za granicą? Każda podróż wiąże się z innymi potrzebami. Pomożemy dobrać zakres ubezpieczenia do celu wyjazdu, planowanych aktywności i miejsca pobytu.",
+   note=("Podróżuj, odkrywaj, doświadczaj.", "O ochronę zadbaj przed wyjazdem."),
+   when_lead="Każda podróż jest inna. Niezależnie od jej celu, warto zadbać o odpowiednią ochronę.",
    alt="Otwarte drzwi domu z widokiem na słoneczny ogród i wzgórza",
-   when=["Planujesz urlop poza Polską.",
-         "Jedziesz na narty, w wysokie góry albo nurkować.",
-         "Wyjeżdżasz do pracy fizycznej za granicę.",
-         "Podróżujesz kilka razy w roku i polisa roczna może wyjść taniej."],
-   qs=[("Dokąd i na jak długo?","Europa, świat, kraje z wysokimi kosztami leczenia, takie jak USA."),
-       ("Jaka suma kosztów leczenia?","Od niej zależy, czy polisa pokryje leczenie w szpitalu i transport do Polski."),
-       ("Co będziesz robić?","Sporty zimowe, wysokogórskie i wodne często wymagają rozszerzenia."),
-       ("Bagaż, OC i rezygnacja z wyjazdu","Dodatki, które warto omówić przy droższych wyjazdach."),
-       ("Choroby przewlekłe","Czy polisa obejmie zaostrzenie choroby, którą już masz.")],
-   prep=["Kraj oraz daty wyjazdu i powrotu",
-         "Liczba i wiek podróżujących osób",
-         "Planowane aktywności i sporty",
-         "Koszt wyjazdu, jeśli chcesz ubezpieczyć rezygnację"],
-   faq=[("Czy karta EKUZ wystarczy?","EKUZ daje dostęp do publicznej opieki zdrowotnej w krajach UE i EFTA na zasadach obowiązujących miejscowych. Nie pokrywa transportu do Polski ani leczenia w prywatnych placówkach, dlatego przyda się też polisa turystyczna."),
-        ("Czy mogę kupić polisę, gdy jestem już za granicą?","Część towarzystw na to pozwala, zwykle z kilkudniową karencją. Łatwiej i pewniej jest załatwić to przed wyjazdem."),
-        ("Kiedy ubezpieczyć rezygnację z wyjazdu?","Zwykle krótko po rezerwacji. Dokładny termin zależy od warunków konkretnego towarzystwa.")]),
+   when=["Planujesz urlop za granicą i chcesz zabezpieczyć się na wypadek kosztów leczenia lub nieprzewidzianych zdarzeń.",
+         "Wybierasz się na narty, trekking w górach, nurkowanie lub uprawiasz inne aktywności wymagające rozszerzonej ochrony.",
+         "Wyjeżdżasz za granicę do pracy, szczególnie fizycznej, i potrzebujesz zakresu uwzględniającego charakter wykonywanych obowiązków.",
+         "Podróżujesz kilka razy w roku – ubezpieczenie roczne może okazać się korzystniejsze niż kupowanie osobnej polisy na każdy wyjazd.",
+         "Podróżujesz z rodziną i chcesz zadbać o ochronę wszystkich uczestników wyjazdu.",
+         "Organizujesz dłuższy wyjazd lub podróż do kraju, w którym koszty leczenia są szczególnie wysokie."],
+   qs_lead="Aby przygotować odpowiednią ofertę, potrzebujemy kilku informacji, które pozwolą nam dopasować zakres ubezpieczenia do kierunku, czasu trwania i charakteru Twojego wyjazdu.",
+   qs=[("Dokąd i na jak długo podróżujesz?","Znaczenie ma nie tylko kierunek wyjazdu, ale również czas pobytu. Innego zakresu ochrony możesz potrzebować podczas podróży po Europie, a innego w krajach, w których koszty leczenia są bardzo wysokie, np. w USA."),
+       ("Jaka suma kosztów leczenia będzie odpowiednia?","Powinna uwzględniać koszty leczenia szpitalnego, wizyt lekarskich, zabiegów i transportu medycznego. Szczególnie ważne jest to podczas wyjazdów poza Europę."),
+       ("Jakie aktywności planujesz?","Narty, wspinaczka wysokogórska, nurkowanie czy inne sporty mogą wymagać rozszerzenia ochrony. Ważne, aby zakres polisy odpowiadał rzeczywistemu charakterowi wyjazdu."),
+       ("Czy potrzebujesz dodatkowej ochrony?","Ubezpieczenie bagażu, OC w życiu prywatnym, następstw nieszczęśliwych wypadków (NNW) czy kosztów rezygnacji z podróży mogą okazać się przydatne, szczególnie przy droższych wyjazdach."),
+       ("Czy uwzględniono choroby przewlekłe?","Jeśli chorujesz przewlekle, sprawdź, czy polisa obejmuje zaostrzenie choroby lub nagłe pogorszenie stanu zdrowia podczas podróży. Niekiedy wymaga to dodatkowego rozszerzenia.")],
+   prep=["Kraj, do którego podróżujesz, oraz datę wyjazdu i powrotu.",
+         "Dane wszystkich uczestników wyjazdu.",
+         "Cel podróży – wypoczynek, sport, praca czy inny rodzaj wyjazdu.",
+         "Planowane aktywności, np. uprawiane sporty i dyscypliny podwyższonego ryzyka.",
+         "Koszt podróży, jeśli chcesz objąć ochroną koszty rezygnacji lub przerwania wyjazdu."],
+   faq=[("Czy karta EKUZ wystarczy?","EKUZ zapewnia dostęp do niezbędnej opieki zdrowotnej w publicznym systemie ochrony zdrowia krajów UE, EFTA i Szwajcarii, na zasadach obowiązujących osoby ubezpieczone w danym kraju. Nie pokrywa jednak wszystkich kosztów leczenia, transportu medycznego do Polski ani co do zasady leczenia w prywatnych placówkach. Dlatego warto uzupełnić ją o ubezpieczenie turystyczne."),
+        ("Czy mogę kupić polisę, gdy jestem już za granicą?","Niektóre towarzystwa umożliwiają zakup ubezpieczenia już podczas podróży. Trzeba jednak sprawdzić warunki zawarcia umowy, ponieważ może obowiązywać karencja, a zakres ochrony może być ograniczony. Najbezpieczniej wykupić polisę jeszcze przed wyjazdem."),
+        ("Kiedy ubezpieczyć koszty rezygnacji z wyjazdu?","Najlepiej zrobić to zaraz po dokonaniu rezerwacji lub zakupie wyjazdu. Ubezpieczyciele określają własne terminy zawarcia takiej umowy, dlatego warto sprawdzić je przed zakupem. Zbyt późne wykupienie polisy może oznaczać brak możliwości objęcia rezerwacji ochroną.")]),
  dict(slug="firma", icon="briefcase", img="area-firma", name="Firma", topic="Firma",
    card="Majątek, OC działalności i ciągłość pracy po szkodzie.",
    title="Ubezpieczenie firmy", seo="Ubezpieczenie firmy i OC działalności, Wrocław",
-   lead="Majątek, ludzie, odpowiedzialność wobec klientów i to, co się dzieje, gdy firma musi stanąć. Zaczynamy od tego, czym się zajmujesz i gdzie są największe ryzyka.",
+   lead="Majątek, pracownicy, odpowiedzialność wobec klientów i ciągłość działania – to obszary, które wymagają odpowiedniej ochrony. Zaczynamy od poznania Twojej działalności i oceny ryzyk, które mogą mieć największe znaczenie dla firmy.",
+   note=("Chroń to, co budujesz każdego dnia.", "Zabezpiecz swoją firmę i skup się na jej rozwoju."),
+   when_lead="<strong>Ubezpieczenie firmy warto rozważyć szczególnie wtedy, gdy:</strong>",
    alt="Dwoje rzemieślników ogląda drewnianą ramę w warsztacie",
-   when=["Zakładasz działalność albo otwierasz nowe miejsce.",
-         "Kontrahent albo przetarg wymaga od Ciebie OC.",
-         "Kupujesz maszyny, sprzęt albo samochody firmowe.",
-         "Firma urosła, a polisy zostały takie jak na początku."],
-   qs=[("Co jest majątkiem firmy?","Lokal, maszyny, towar, sprzęt elektroniczny, gotówka."),
-       ("Za co odpowiadasz wobec innych?","OC z tytułu prowadzenia działalności, OC za produkt, OC zawodowe."),
-       ("Co, jeśli firma stanie?","Utracony zysk po pożarze lub zalaniu i stałe koszty, które trzeba płacić dalej."),
-       ("Jak chronić pracowników?","Ubezpieczenia grupowe i NNW."),
-       ("Czy masz flotę albo towar w drodze?","Pojazdy firmowe i ubezpieczenie przewożonych ładunków.")],
-   prep=["Kod PKD i krótki opis działalności",
-         "Wartość majątku: lokal, maszyny, towar",
-         "Roczny obrót i liczba pracowników",
-         "Obecne polisy i umowy, które wymagają ubezpieczenia",
-         "Szkody z ostatnich lat, jeśli były"],
-   faq=[("Czy OC działalności jest obowiązkowe?","W niektórych zawodach tak, na przykład u doradców podatkowych, biegłych rewidentów czy pośredników nieruchomości. W innych branżach to wybór, ale kontrahenci często go wymagają."),
-        ("Co to jest ubezpieczenie utraty zysku?","Pokrywa zysk, którego firma nie osiągnęła, i stałe koszty po szkodzie, która zatrzymała działalność, na przykład po pożarze. Zwykle dokupuje się je do ubezpieczenia mienia."),
-        ("Czy pracujecie z jednoosobowymi firmami?","Tak. Zakres dobieramy do skali, więc mała firma nie płaci za ochronę, której nie potrzebuje.")]),
+   when=["Zakładasz działalność gospodarczą lub otwierasz nową lokalizację.",
+         "Kontrahent lub warunki przetargu wymagają od Ciebie posiadania OC.",
+         "Kupujesz maszyny, sprzęt lub samochody wykorzystywane w firmie.",
+         "Zatrudniasz pracowników i chcesz zadbać o ochronę firmy oraz osób, które ją tworzą.",
+         "Rozwijasz działalność, a dotychczasowe polisy nie uwzględniają już skali i charakteru Twojego biznesu."],
+   qs_lead="Aby przygotować odpowiednią ofertę, potrzebujemy kilku informacji, które pozwolą nam dopasować zakres ubezpieczenia do rodzaju prowadzonej działalności, specyfiki Twojej firmy i związanych z nią ryzyk.",
+   qs=[("Co obejmuje majątek Twojej firmy?","Lokal, maszyny, urządzenia, towar, sprzęt elektroniczny czy gotówka."),
+       ("Za co odpowiadasz wobec innych?","OC z tytułu prowadzenia działalności, OC za produkt lub OC zawodowe – zależnie od charakteru firmy."),
+       ("Co, jeśli działalność zostanie czasowo przerwana?","Ubezpieczenie utraty zysku po szkodzie, np. pożarze lub zalaniu, oraz stałych kosztów, które firma nadal musi ponosić."),
+       ("Jak zadbać o ochronę pracowników?","Ubezpieczenia grupowe oraz NNW dla pracowników."),
+       ("Czy Twoja firma korzysta z pojazdów lub przewozi towary?","Ubezpieczenie pojazdów firmowych oraz przewożonych ładunków.")],
+   prep=["Kod PKD oraz krótki opis prowadzonej działalności.",
+         "Informacje o majątku firmy, w tym wartość lokalu, maszyn, urządzeń i towaru.",
+         "Przybliżony roczny obrót oraz liczbę zatrudnionych pracowników.",
+         "Informacje o obecnych polisach oraz umowach lub wymaganiach kontrahentów, które wiążą się z koniecznością posiadania ubezpieczenia.",
+         "Informacje o szkodach z ostatnich lat, jeśli wystąpiły."],
+   faq=[("Czy OC działalności jest obowiązkowe?","W niektórych zawodach obowiązkowe jest ubezpieczenie odpowiedzialności cywilnej z tytułu wykonywania określonego zawodu, np. u doradców podatkowych, lekarzy czy pośredników nieruchomości. W pozostałych branżach OC działalności jest dobrowolne, ale jego posiadania mogą wymagać kontrahenci lub warunki przetargu."),
+        ("Co to jest ubezpieczenie utraty zysku?","Chroni firmę przed skutkami finansowymi przerwy w działalności spowodowanej szkodą objętą ochroną, np. pożarem lub zalaniem. Może obejmować utracony zysk oraz stałe koszty, które firma nadal musi ponosić mimo przestoju. Ubezpieczenie to najczęściej zawierane jest jako rozszerzenie polisy majątkowej."),
+        ("Czy ubezpieczacie również jednoosobowe działalności gospodarcze?","Tak. Zakres ubezpieczenia i sumy ochrony dopasowujemy do rodzaju oraz skali prowadzonej działalności, uwzględniając rzeczywiste potrzeby przedsiębiorcy.")]),
  dict(slug="gospodarstwo", icon="wheat", img="area-gospodarstwo", name="Gospodarstwo", topic="Gospodarstwo",
    card="Budynki, maszyny, uprawy i obowiązkowe OC rolnika.",
    title="Ubezpieczenie gospodarstwa rolnego", seo="Ubezpieczenie gospodarstwa rolnego i OC rolnika",
-   lead="Budynki, maszyny, zwierzęta i uprawy, do tego obowiązkowe OC rolnika. Uporządkujemy, co musisz mieć z mocy prawa, a co warto dobrać do skali gospodarstwa.",
+   lead="Budynki, maszyny, zwierzęta i uprawy, a także obowiązkowe OC rolnika.<br> Pomożemy Ci ustalić, jakie ubezpieczenia są wymagane przepisami, a jakie warto dobrać do specyfiki i skali prowadzonego gospodarstwa.",
+   note=("Z myślą o Twojej pracy.", "Ochrona na każdą porę roku."),
+   when_lead="Gospodarstwo ma swoją wartość.<br><strong>Budynki, maszyny, zwierzęta i uprawy.</strong><br>Zadbaj o ich ochronę.",
    alt="Pola uprawne w pasach, w tle budynki gospodarcze i silosy",
-   when=["Przejmujesz gospodarstwo albo kupujesz ziemię.",
-         "Stawiasz nowy budynek albo kupujesz maszyny.",
-         "Chcesz zabezpieczyć uprawy przed gradem, przymrozkiem lub suszą.",
-         "Zbliża się termin obowiązkowych ubezpieczeń."],
-   qs=[("Co jest obowiązkowe w Twoim przypadku?","OC rolnika i ubezpieczenie budynków rolniczych."),
-       ("Jakie budynki i jakiej wartości?","Dom, budynki inwentarskie, magazyny, wiaty."),
-       ("Jakie maszyny i sprzęt?","Ciągniki, kombajny, maszyny samobieżne i przyczepiane."),
-       ("Uprawy i zwierzęta","Ryzyka pogodowe, choroby zwierząt, dopłaty do składek."),
-       ("Czy prowadzisz działalność dodatkową?","Agroturystyka, sprzedaż bezpośrednia, przetwórstwo.")],
-   prep=["Powierzchnia gospodarstwa",
-         "Lista budynków z przybliżoną wartością",
-         "Maszyny i pojazdy",
-         "Rodzaj upraw i zwierząt",
-         "Obecne polisy"],
+   when=["Przejmujesz gospodarstwo lub kupujesz grunty rolne.",
+         "Budujesz nowy budynek gospodarczy albo inwestujesz w maszyny i sprzęt rolniczy.",
+         "Chcesz zabezpieczyć uprawy przed skutkami gradu, przymrozków lub suszy.",
+         "Zbliża się termin zawarcia obowiązkowych ubezpieczeń rolnych."],
+   qs_lead="Aby przygotować odpowiednią ofertę, potrzebujemy kilku informacji, które pozwolą nam dopasować zakres ubezpieczenia do rodzaju prowadzonej działalności rolniczej, wielkości gospodarstwa i jego specyfiki.",
+   qs=[("Jakie ubezpieczenia są obowiązkowe w Twoim przypadku?","OC rolnika oraz ubezpieczenie budynków wchodzących w skład gospodarstwa rolnego."),
+       ("Jakie budynki wchodzą w skład gospodarstwa i ile są warte?","Dom mieszkalny, budynki inwentarskie, magazyny, stodoły i wiaty."),
+       ("Jakie maszyny i sprzęt wykorzystujesz w gospodarstwie?","Ciągniki, kombajny, maszyny samobieżne i przyczepiane."),
+       ("Jakie uprawy prowadzisz i jakie zwierzęta hodujesz?","Możliwości ubezpieczenia upraw od ryzyk pogodowych i zwierząt gospodarskich, a także dostępne dopłaty do składek."),
+       ("Czy prowadzisz dodatkową działalność?","Agroturystykę, sprzedaż bezpośrednią lub przetwórstwo produktów rolnych.")],
+   prep=["Powierzchnię gospodarstwa oraz areał gruntów rolnych.",
+         "Wykaz budynków gospodarczych wraz z ich przybliżoną wartością.",
+         "Informację o posiadanych maszynach i pojazdach rolniczych.",
+         "Rodzaj prowadzonych upraw oraz gatunki i liczbę utrzymywanych zwierząt.",
+         "Informację o obecnych polisach ubezpieczeniowych, jeśli je posiadasz."],
+   # FAQ: czeka na odpowiedź Kasi (w dokumencie skopiowane z Firmy) – zostają dotychczasowe pytania rolnicze
    faq=[("Które ubezpieczenia rolnika są obowiązkowe?","OC rolnika z tytułu posiadania gospodarstwa rolnego oraz ubezpieczenie budynków wchodzących w skład gospodarstwa od ognia i innych zdarzeń losowych."),
         ("Kogo dotyczy obowiązek?","Właścicieli i posiadaczy gospodarstw o powierzchni ponad 1 ha przeliczeniowego. Przy przejęciu gospodarstwa polisa przechodzi na nowego właściciela."),
         ("Czy do ubezpieczenia upraw są dopłaty?","Do części upraw i zwierząt państwo dopłaca do składki. Zakres dopłat się zmienia, dlatego sprawdzamy go przy każdej ofercie.")]),
@@ -195,7 +228,6 @@ CLAIMS = dict(slug="pomoc-przy-szkodzie", img="step-1", name="Pomoc przy szkodzi
          "Numer notatki lub protokołu policji – jeśli policja interweniowała",
          "Rachunki, faktury lub inne dokumenty potwierdzające wartość utraconych lub uszkodzonych rzeczy",
          "Numer rachunku bankowego do wypłaty odszkodowania"],
-   faq_lead="Poniższe odpowiedzi mają charakter ogólny. Szczegółowe zasady postępowania zależą od warunków ubezpieczenia i rodzaju zdarzenia, dlatego każdą sytuację analizujemy indywidualnie.",
    faq=[("Ile mam czasu na zgłoszenie szkody?","Termin zależy od rodzaju ubezpieczenia i zapisów ogólnych warunków ubezpieczenia. W niektórych przypadkach na zgłoszenie jest niewiele czasu. Kradzież lub włamanie należy niezwłocznie zgłosić policji, zgodnie z wymaganiami polisy. Nie zwlekaj z kontaktem – pomożemy Ci ustalić, jakie terminy obowiązują w Twojej sytuacji."),
         ("Co zrobić, jeśli nie zgadzam się z decyzją towarzystwa ubezpieczeniowego?","Jeśli nie zgadzasz się z decyzją, możesz złożyć reklamację i przedstawić argumenty przemawiające za ponownym rozpatrzeniem sprawy. Pomożemy Ci przeanalizować decyzję, przygotować uzasadnienie i skompletować dokumenty. W przypadku sporu możesz również skorzystać z pomocy Rzecznika Finansowego."),
         ("Czy z OC sprawcy przysługuje mi samochód zastępczy?","Możesz ubiegać się o pokrycie kosztów wynajmu samochodu zastępczego, jeśli korzystanie z niego było uzasadnione i niezbędne na czas naprawy lub w okresie, w którym Twój samochód nie nadawał się do użytkowania.")])
@@ -222,7 +254,7 @@ def head(title, desc, canonical, extra=""):
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B2E2E'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='21' text-anchor='middle' fill='%23F7F4EF'%3Ep%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1794008113">
+<link rel="stylesheet" href="styles.css?v=1794129275">
 {extra}</head>
 <body>
 <a class="skip" href="#main">Przejdź do treści</a>
@@ -310,12 +342,12 @@ def footer(home=True, has_contact=True):
   <div class="wrap">
     <div class="footer__cta">
       <p class="footer__ask">Sprawdź, czy Twoje ubezpieczenie naprawdę Cię chroni.</p>
-      <a class="btn btn--primary" href="{k}" data-topic="Analiza obecnych polis">Umów analizę polisy {ic("arrow")}</a>
+      <a class="btn btn--primary" href="{k}" data-topic="Analiza obecnych polis">Porozmawiajmy {ic("arrow")}</a>
     </div>
     <div class="footer__grid">
       <div>
         <a class="logo" href="{p or '#top'}" aria-label="Polfinans, strona główna">{LOGO}</a>
-        <p class="footer__motto">Bezpieczeństwo to kwestia wyboru. Dobre decyzje to spokojna przyszłość.</p>
+        <p class="footer__motto">Bezpieczeństwo to kwestia wyboru.<br>Dobre decyzje to spokojna przyszłość.</p>
         <p class="footer__promise">{ic("shield")}<span>Twoje bezpieczeństwo to nasz priorytet.</span></p>
       </div>
       <div><h3>Ubezpieczenia</h3><ul>{areas}<li><a href="pomoc-przy-szkodzie.html">Pomoc przy szkodzie</a></li></ul></div>
@@ -337,7 +369,7 @@ def footer(home=True, has_contact=True):
   <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń</a>
   <a class="btn btn--ghost" href="#kontakt">Napisz</a>
 </div>
-<script src="main.js?v=1794008113" defer></script>
+<script src="main.js?v=1794129275" defer></script>
 </body>
 </html>
 '''
@@ -387,7 +419,7 @@ def index():
     </div>
     <figure class="hero__media" id="heroMedia">
       <div class="hero__frame">{picture("hero-dom","Kobieta z zakupami i pies wchodzą do jasnego domu przez otwarte drzwi tarasowe", eager=True)}</div>
-      <figcaption class="note"><strong>Najpierw zrozumieć.</strong><span>Potem rozmawiać o rozwiązaniu.</span></figcaption>
+      <figcaption class="note"><strong>Z myślą o tym, co ważne.</strong><span>Dobre decyzje zaczynają się tutaj.</span></figcaption>
     </figure>
   </div>
 </section>
@@ -412,7 +444,7 @@ def index():
   <div class="wrap help__grid">
     <div class="help__side">
       <div class="head">
-        <span class="eyebrow">Co robimy</span>
+        <span class="eyebrow">Jak pracujemy</span>
         <h2 id="help-title">Od pierwszej rozmowy do wypłaty odszkodowania</h2>
         <p>Jesteśmy multiagencją, więc pracujemy z kilkoma towarzystwami ubezpieczeniowymi i możemy porównać ich oferty. Sprawę prowadzi jedna osoba, do której możesz wrócić.</p>
       </div>
@@ -466,7 +498,7 @@ def index():
     </figure>
     <div class="about__text">
       <span class="eyebrow">O nas</span>
-      <h2 id="about-title">Polfinans Grupa Partnerska</h2>
+      <h2 id="about-title" class="about__logo"><span class="sr-only">Polfinans Grupa Partnerska</span><span class="logo" aria-hidden="true">{LOGO}</span></h2>
       <p><strong>Polfinans – Grupa Partnerska</strong> to multiagencja ubezpieczeniowa z Wrocławia, która łączy wieloletnie doświadczenie, profesjonalne doradztwo i indywidualne podejście do klienta. Od 30 lat działamy na polskim rynku, współpracując z wiodącymi towarzystwami ubezpieczeniowymi. Dzięki temu możemy porównywać szeroki wybór ofert i proponować rozwiązania dopasowane do potrzeb klientów indywidualnych, firm i instytucji.</p>
       <p>Zapewniamy wsparcie na każdym etapie współpracy – od analizy potrzeb i wyboru odpowiedniego ubezpieczenia, przez zawarcie umowy, aż po pomoc w przypadku wystąpienia szkody i jej likwidacji. Dbamy o to, aby proponowane rozwiązania były zrozumiałe, odpowiednio dobrane i odpowiadały rzeczywistym potrzebom naszych klientów.</p>
       <p>Stawiamy na rzetelność, wysoką jakość obsługi i partnerskie relacje. Wierzymy, że dobre ubezpieczenie to coś więcej niż polisa – to przemyślana ochrona, poczucie bezpieczeństwa i pewność, że w ważnych momentach można liczyć na nasze wsparcie.</p>
@@ -518,18 +550,30 @@ def subpage(a, claims=False):
 </section>'''
         prep_section = f'''<section class="section prep tabbed" aria-labelledby="qs-title">
   <div class="wrap cols">
-    <div class="cols__intro"><span class="eyebrow">Przed rozmową</span><h2 id="qs-title">O co zapytamy</h2><p>Te pytania porządkują rozmowę. Nie musisz znać odpowiedzi na wszystkie, ustalimy je razem.</p>
+    <div class="cols__intro"><span class="eyebrow">Przed rozmową</span><h2 id="qs-title">Kilka pytań na początek</h2><p>{a["qs_lead"]}</p>
       <div style="margin-top:1.5rem"><h3 style="font-size:1.35rem;margin-bottom:1rem">Co warto przygotować</h3><ul class="checklist">{checklist(a["prep"])}</ul><div class="prep__meter"><span data-count>Gotowe: 0 z {len(a["prep"])}</span><b aria-hidden="true"></b></div></div>
     </div>
     <ol class="qs">{"".join(f"<li><div><strong>{q}</strong><span>{d}</span></div></li>" for q, d in a["qs"])}</ol>
   </div>
 </section>'''
-        band_t, band_p = f"Porozmawiajmy o Twojej sprawie", "Przygotujemy porównanie i powiemy, który wariant polecamy i dlaczego."
+    band_html = f'''<section class="claims tabbed" aria-labelledby="band-title">
+  <div class="claims__clip" aria-hidden="true"><svg class="claims__mark" style="stroke-width:.5"><use href="#i-buoy"/></svg></div>
+  <div class="wrap claims__inner">
+    <div><h2 id="band-title">{band_t}</h2><p>{band_p}</p></div>
+    <div class="claims__ctas">
+      <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} {PHONE_SHORT}</a>
+      <a class="btn btn--light" href="#kontakt">Napisz wiadomość {ic("arrow")}</a>
+    </div>
+  </div>
+</section>''' if claims else ""
     hero_ctas = f'''<div class="hero__ctas" data-rise style="--i:3">
         <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń: {PHONE_SHORT}</a>
         <a class="btn btn--ghost" href="#kontakt">Napisz do nas</a>
       </div>''' if claims else ""
-    return head(f'{a["seo"]} | Polfinans', a["lead"][:155], f'{a["slug"]}.html') + nav(False, "szkoda" if claims else "obszary") + f'''
+    lead_txt = re.sub(r"<[^>]+>", " ", a["lead"]); lead_txt = re.sub(r"\s+", " ", lead_txt).strip()
+    note_t, note_s = ("Spokojnie, krok po kroku.", "Powiemy, co zrobić w pierwszej kolejności.") if claims else a["note"]
+    note_html = f'<strong>{note_t}</strong>' + (f'<span>{note_s}</span>' if note_s else "")
+    return head(f'{a["seo"]} | Polfinans', lead_txt[:155], f'{a["slug"]}.html') + nav(False, "szkoda" if claims else "obszary") + f'''
 <main id="main">
 <section class="hero page-hero" id="top" aria-labelledby="hero-title">
   <div class="hero__inner">
@@ -541,25 +585,16 @@ def subpage(a, claims=False):
     </div>
     <figure class="hero__media" id="heroMedia">
       <div class="hero__frame">{picture(a["img"], a["alt"], eager=True)}</div>
-      <figcaption class="note"><strong>{"Spokojnie, krok po kroku." if claims else "Najpierw zrozumieć."}</strong><span>{"Powiemy, co zrobić w pierwszej kolejności." if claims else "Potem rozmawiać o rozwiązaniu."}</span></figcaption>
+      <figcaption class="note">{note_html}</figcaption>
     </figure>
   </div>
 </section>
 {first}
 {prep_section}
-<section class="claims tabbed" aria-labelledby="band-title">
-  <div class="claims__clip" aria-hidden="true"><svg class="claims__mark" style="stroke-width:.5"><use href="#i-{"buoy" if claims else a["icon"]}"/></svg></div>
-  <div class="wrap claims__inner">
-    <div><h2 id="band-title">{band_t}</h2><p>{band_p}</p></div>
-    <div class="claims__ctas">
-      <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} {PHONE_SHORT}</a>
-      <a class="btn btn--light" href="#kontakt">Napisz wiadomość {ic("arrow")}</a>
-    </div>
-  </div>
-</section>
+{band_html}
 <section class="section sub" aria-labelledby="faq-title">
   <div class="wrap cols">
-    <div class="cols__intro"><span class="eyebrow">Pytania</span><h2 id="faq-title">Często zadawane pytania</h2><p>{a.get("faq_lead","Odpowiedzi są ogólne. Szczegóły zależą od warunków konkretnego towarzystwa i sprawdzamy je przy Twojej ofercie.")}</p></div>
+    <div class="cols__intro"><span class="eyebrow">Pytania</span><h2 id="faq-title">Często zadawane pytania</h2><p>{FAQ_LEAD}</p></div>
     <div class="faq">{faq_html(a["faq"])}</div>
   </div>
 </section>

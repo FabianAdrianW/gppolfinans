@@ -511,3 +511,14 @@ ul{margin:0}
 .footer p.footer__legal{max-width:none;margin-top:2.25rem;font-size:.82rem;line-height:1.6}
 .footer p.footer__legal a{min-height:0;display:inline;color:var(--ink)}
 .footer__legal + .footer__bottom{margin-top:1rem}
+/* Runda 2 */
+.logo__word{font-size:2.15rem}
+.logo__sub{font-size:.58rem;margin-top:.4rem}
+.nav__links a{color:var(--wine)}
+.about__logo{margin-top:1.1rem;line-height:1}
+.about__logo .logo{min-height:0}
+.about__logo .logo__word{font-size:clamp(3rem,2rem + 3vw,4.6rem)}
+.about__logo .logo__sub{font-size:clamp(.8rem,.6rem + .5vw,1.05rem);margin-top:.7rem}
+.footer .logo__word{font-size:1.9rem}
+.checklist strong{font-weight:600;color:var(--ink)}
+@media (max-width:640px){.hero__lead br{display:none}}
