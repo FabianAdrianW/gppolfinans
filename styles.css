@@ -522,3 +522,4 @@ ul{margin:0}
 .footer .logo__word{font-size:1.9rem}
 .checklist strong{font-weight:600;color:var(--ink)}
 @media (max-width:640px){.hero__lead br{display:none}}
+.hero h1.h1--long{font-size:clamp(2.1rem,1rem + 2.3vw,3.55rem);max-width:21ch;line-height:1.08}

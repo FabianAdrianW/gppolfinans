@@ -4,12 +4,12 @@ import json, pathlib, re
 ROOT = pathlib.Path(__file__).parent
 
 PHONE = "+48 504 031 330"; PHONE_TEL = "+48504031330"; PHONE_SHORT = "504 031 330"
-MAIL = "gppolfinans@gmail.com"
+MAIL = "biuro@gppolfinans.pl"
 ADDR1 = "ul. Metalowców 9, pok. 110"; ADDR2 = "54-156 Wrocław"
 MAPS = "https://www.google.com/maps/search/?api=1&query=Metalowc%C3%B3w+9+54-156+Wroc%C5%82aw"
 FIRM = "Anna Wojda „POLFINANS”"; NIP = "898-132-68-85"; REGON = "020499082"; KNF_NO = "11200056/A"
 KNF_URL = "https://rpu.knf.gov.pl/search/agent/11200056%2FA/353623"
-WEB3FORMS_KEY = "TODO_WEB3FORMS_KEY"   # TODO: klucz z web3forms.com założony na gppolfinans@gmail.com
+WEB3FORMS_KEY = "TODO_WEB3FORMS_KEY"   # TODO: klucz z web3forms.com założony na biuro@gppolfinans.pl
 
 ICONS = {
  "home":'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
@@ -79,7 +79,7 @@ AREAS = [
    card="OC, AC, assistance i to, jak naprawdę używasz auta.",
    title="Ubezpieczenie samochodu", seo="Ubezpieczenie samochodu OC i AC, Wrocław",
    lead="OC jest obowiązkowe, natomiast zakres ochrony może być znacznie szerszy – w zależności od Twoich potrzeb i sposobu użytkowania auta. Porównamy oferty kilku towarzystw, aby pomóc Ci wybrać najlepsze rozwiązanie.",
-   note=("Właściwa ochrona zaczyna się od dobrego wyboru.", ""),
+   note=("Właściwa ochrona zaczyna się od dobrego wyboru.", "Spokojna podróż. Bezpieczny powrót."),
    when_lead="Różne sytuacje na drodze wymagają różnego zakresu ochrony.",
    alt="Mężczyzna wkłada torbę do bagażnika samochodu przed domem",
    when=["Kupujesz samochód – nowy lub używany.",
@@ -104,9 +104,9 @@ AREAS = [
  dict(slug="zycie", icon="heart", img="area-zycie", name="Życie", topic="Życie",
    card="Bliscy, kredyt i zobowiązania, które zostają na lata.",
    title="Ubezpieczenie na życie", seo="Ubezpieczenie na życie, Wrocław",
-   lead="Ta polisa jest dla ludzi, którzy na Tobie polegają,<br> i na zobowiązania, które zostają na lata.<br> Pomożemy dobrać sumę i zakres do Twojej rodziny, kredytu i planów.",
+   lead="To ochrona dla Ciebie i osób, które są dla Ciebie najważniejsze. Zapewnia finansowe wsparcie bliskim, pomaga zabezpieczyć zobowiązania i daje poczucie bezpieczeństwa na przyszłość. <br><br><strong>Zadbaj o bezpieczeństwo swoje i tych, na których Ci zależy.</strong>",
    note=("Zabezpiecz dziś to, co ważne jutro.", "Z myślą o tych, którzy są dla Ciebie najważniejsi."),
-   when_lead="W życiu pojawiają się momenty, w których warto pomyśleć o dodatkowym zabezpieczeniu.<br><br>Ubezpieczenie na życie warto rozważyć szczególnie wtedy, gdy:",
+   when_lead="Zakres polisy możemy rozszerzyć o dodatkowe pakiety chroniące m.in. na wypadek poważnego zachorowania, pobytu w szpitalu czy następstw nieszczęśliwych wypadków (NNW). Dostępne rozwiązania mogą obejmować również assistance, zapewniające praktyczną pomoc medyczną i organizacyjną w trudnych sytuacjach.<br><br>Dobierzemy sumę ubezpieczenia i zakres ochrony do Twojej sytuacji, potrzeb rodziny, zobowiązań finansowych i planów na przyszłość.<br><br>W życiu pojawiają się momenty, w których warto pomyśleć o dodatkowym zabezpieczeniu. Ubezpieczenie na życie warto rozważyć szczególnie wtedy, gdy:",
    alt="Rodzina przygotowuje razem posiłek w kuchni",
    when=["Masz rodzinę i chcesz zapewnić bliskim zabezpieczenie finansowe.",
          "Planujesz zakup mieszkania lub spłacasz kredyt hipoteczny.",
@@ -136,7 +136,7 @@ AREAS = [
    lead="Urlop, wyjazd na narty, a może praca za granicą? Każda podróż wiąże się z innymi potrzebami. Pomożemy dobrać zakres ubezpieczenia do celu wyjazdu, planowanych aktywności i miejsca pobytu.",
    note=("Podróżuj, odkrywaj, doświadczaj.", "O ochronę zadbaj przed wyjazdem."),
    when_lead="Każda podróż jest inna. Niezależnie od jej celu, warto zadbać o odpowiednią ochronę.",
-   alt="Otwarte drzwi domu z widokiem na słoneczny ogród i wzgórza",
+   alt="Słomkowy kapelusz, okulary, aparat, walizka, mapa i paszport na stole, w tle startujący samolot",
    when=["Planujesz urlop za granicą i chcesz zabezpieczyć się na wypadek kosztów leczenia lub nieprzewidzianych zdarzeń.",
          "Wybierasz się na narty, trekking w górach, nurkowanie lub uprawiasz inne aktywności wymagające rozszerzonej ochrony.",
          "Wyjeżdżasz za granicę do pracy, szczególnie fizycznej, i potrzebujesz zakresu uwzględniającego charakter wykonywanych obowiązków.",
@@ -205,10 +205,9 @@ AREAS = [
          "Informację o posiadanych maszynach i pojazdach rolniczych.",
          "Rodzaj prowadzonych upraw oraz gatunki i liczbę utrzymywanych zwierząt.",
          "Informację o obecnych polisach ubezpieczeniowych, jeśli je posiadasz."],
-   # FAQ: czeka na odpowiedź Kasi (w dokumencie skopiowane z Firmy) – zostają dotychczasowe pytania rolnicze
-   faq=[("Które ubezpieczenia rolnika są obowiązkowe?","OC rolnika z tytułu posiadania gospodarstwa rolnego oraz ubezpieczenie budynków wchodzących w skład gospodarstwa od ognia i innych zdarzeń losowych."),
-        ("Kogo dotyczy obowiązek?","Właścicieli i posiadaczy gospodarstw o powierzchni ponad 1 ha przeliczeniowego. Przy przejęciu gospodarstwa polisa przechodzi na nowego właściciela."),
-        ("Czy do ubezpieczenia upraw są dopłaty?","Do części upraw i zwierząt państwo dopłaca do składki. Zakres dopłat się zmienia, dlatego sprawdzamy go przy każdej ofercie.")]),
+   faq=[("Które ubezpieczenia rolnika są obowiązkowe?","Obowiązkowe są dwa ubezpieczenia: OC rolnika z tytułu posiadania gospodarstwa rolnego oraz ubezpieczenie budynków wchodzących w skład gospodarstwa od ognia i innych zdarzeń losowych. Dodatkowo rolnicy otrzymujący dopłaty bezpośrednie mają obowiązek ubezpieczenia co najmniej 50% powierzchni upraw objętych dopłatami od przynajmniej jednego z wymaganych ryzyk."),
+        ("Kogo dotyczy obowiązek ubezpieczenia OC i budynków?","Właścicieli i posiadaczy gospodarstw rolnych o powierzchni przekraczającej 1 ha użytków rolnych, podlegających opodatkowaniu podatkiem rolnym, a także osób prowadzących działy specjalne produkcji rolnej – niezależnie od powierzchni gospodarstwa. W przypadku zmiany posiadacza gospodarstwa prawa i obowiązki wynikające z zawartych umów ubezpieczenia przechodzą na nowego posiadacza."),
+        ("Czy do ubezpieczenia upraw są dopłaty?","Tak. Państwo dofinansowuje składki ubezpieczenia wybranych upraw i zwierząt gospodarskich. Wysokość dopłat może sięgać 65% składki, a ich przyznanie zależy od rodzaju uprawy, zwierząt i zakresu ochrony określonego w aktualnych przepisach.")]),
 ]
 BY = {a["slug"]: a for a in AREAS}
 
@@ -254,7 +253,7 @@ def head(title, desc, canonical, extra=""):
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B2E2E'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='21' text-anchor='middle' fill='%23F7F4EF'%3Ep%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1794129275">
+<link rel="stylesheet" href="styles.css?v=1794161105">
 {extra}</head>
 <body>
 <a class="skip" href="#main">Przejdź do treści</a>
@@ -369,7 +368,7 @@ def footer(home=True, has_contact=True):
   <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń</a>
   <a class="btn btn--ghost" href="#kontakt">Napisz</a>
 </div>
-<script src="main.js?v=1794129275" defer></script>
+<script src="main.js?v=1794161105" defer></script>
 </body>
 </html>
 '''
@@ -385,11 +384,11 @@ def index():
     frame = "".join(f'<img class="{"is-active" if i == 0 else ""}" src="img/{a["img"]}-800.webp" data-full="img/{a["img"]}.webp" width="800" height="533" alt="" decoding="async">' for i, a in enumerate(AREAS))
     cards = "".join(f'<a class="frame__cap{" is-active" if i == 0 else ""}" href="{a["slug"]}.html"{"" if i == 0 else ' tabindex="-1" aria-hidden="true"'}><span class="frame__ic">{ic(a["icon"])}</span><span class="frame__txt"><strong>{a["name"]}</strong><span>{a["card"]}</span></span><span class="frame__more">Szczegóły {ic("arrow")}</span></a>' for i, a in enumerate(AREAS))
     rows = [
-      ("search","Analiza obecnych polis","Przynieś to, co już masz. Sprawdzimy zakres, sumy i wyłączenia, żeby było jasne, przed czym polisa chroni, a przed czym nie.","Analiza obecnych polis"),
-      ("scale","Porównanie ofert","Zestawiamy warianty kilku towarzystw według tych samych kryteriów. Różnice w zakresie i cenie widzisz obok siebie.","Inne / jeszcze nie wiem"),
-      ("pen","Pomoc przy zawarciu umowy","Przechodzimy razem przez dokumenty i warunki. Podpisujesz, kiedy wiesz, co podpisujesz.","Inne / jeszcze nie wiem"),
-      ("buoy","Wsparcie przy szkodzie","Pomagamy zgłosić szkodę, skompletować dokumenty i doprowadzić likwidację do końca.","Szkoda"),
-      ("refresh","Stała opieka","Wracamy do ustaleń, kiedy zmienia się Twoja sytuacja albo zbliża się odnowienie polisy.","Inne / jeszcze nie wiem"),
+      ("search","Analiza obecnych polis","Sprawdzimy zakres ochrony, sumy ubezpieczenia i wyłączenia odpowiedzialności.","Analiza obecnych polis"),
+      ("scale","Porównanie ofert","Porównamy oferty kilku towarzystw ubezpieczeniowych, zwracając uwagę na zakres ochrony, warunki i cenę.","Inne / jeszcze nie wiem"),
+      ("pen","Pomoc przy zawarciu umowy","Wyjaśnimy warunki ubezpieczenia i pomożemy dopełnić formalności, abyś wiedział, co obejmuje polisa i na jakich zasadach działa.","Inne / jeszcze nie wiem"),
+      ("buoy","Wsparcie przy szkodzie","Pomożemy zgłosić szkodę, skompletować dokumentację i przejść przez kolejne etapy jej likwidacji.","Szkoda"),
+      ("refresh","Stała opieka","Przypomnimy o zbliżających się terminach wznowienia polis i pomożemy ocenić, czy dotychczasowy zakres ochrony nadal odpowiada Twojej sytuacji i potrzebom.","Inne / jeszcze nie wiem"),
     ]
     rows_html = "".join(f'<li><a class="row" href="#kontakt" data-topic="{tp}"><span class="row__icon">{ic(icn)}</span><h3>{t}</h3><p>{d}</p><span class="row__go">{ic("arrow")}</span></a></li>' for icn, t, d, tp in rows)
     steps = [("Analiza potrzeb","Rozmawiamy o Twojej sytuacji, oczekiwaniach i tym, co jest dla Ciebie najważniejsze.","step-1","Rozmowa o sytuacji klienta przy stole"),
@@ -408,7 +407,7 @@ def index():
 <section class="hero" id="top" aria-labelledby="hero-title">
   <div class="hero__inner">
     <div>
-      <h1 id="hero-title" class="h1--long" data-rise style="--i:0">Doradztwo ubezpieczeniowe oparte na analizie i&nbsp;doświadczeniu</h1>
+      <h1 id="hero-title" class="h1--long" data-rise style="--i:0">Doradztwo i pośrednictwo ubezpieczeniowe oparte na wiedzy, analizie i&nbsp;doświadczeniu</h1>
       <p class="hero__lead" data-rise style="--i:1">Każdy Klient i jego potrzeby są inne, dlatego do ubezpieczeń podchodzimy indywidualnie. Pomagamy dobrać odpowiedni zakres ochrony, przedstawiamy dostępne rozwiązania i wspieramy w podejmowaniu świadomych decyzji. Bo dobre ubezpieczenie to coś więcej niż dokument i suma gwarancyjna – to przemyślana ochrona, poczucie bezpieczeństwa oraz pewność, że w ważnych momentach możesz liczyć na nasze wsparcie.</p>
       <ul class="creds" data-rise style="--i:2">
         <li>{ic("award")}30 lat na rynku</li>
@@ -445,10 +444,11 @@ def index():
     <div class="help__side">
       <div class="head">
         <span class="eyebrow">Jak pracujemy</span>
-        <h2 id="help-title">Od pierwszej rozmowy do wypłaty odszkodowania</h2>
-        <p>Jesteśmy multiagencją, więc pracujemy z kilkoma towarzystwami ubezpieczeniowymi i możemy porównać ich oferty. Sprawę prowadzi jedna osoba, do której możesz wrócić.</p>
+        <h2 id="help-title">Więcej niż ubezpieczenie</h2>
+        <p>Jako multiagencja współpracujemy z wieloma towarzystwami ubezpieczeniowymi, dzięki czemu możemy porównać ich oferty i pomóc Ci wybrać odpowiednią polisę. Nasza rola nie kończy się jednak na jej zawarciu. Pozostajemy do Twojej dyspozycji również wtedy, gdy potrzebujesz wsparcia przy zgłoszeniu i likwidacji szkody, chcesz przeanalizować swoje dotychczasowe ubezpieczenia lub rozszerzyć ochronę na kolejne obszary swojego życia.</p>
+        <p>Stawiamy na bezpośredni kontakt i indywidualne podejście. Nie jesteś dla nas numerem polisy – zależy nam na relacjach opartych na zaufaniu, zaangażowaniu i partnerskiej współpracy.</p>
       </div>
-      <div class="ask"><svg class="ask__mark" aria-hidden="true" style="stroke-width:.6"><use href="#i-compass"/></svg><h3>Nie wiesz, od czego zacząć?</h3><p>Opisz krótko swoją sytuację, a zaproponujemy, od czego zacząć.</p><a class="btn btn--light" href="#kontakt" data-topic="Inne / jeszcze nie wiem">Napisz do nas {ic("arrow")}</a></div>
+      <div class="ask"><svg class="ask__mark" aria-hidden="true" style="stroke-width:.6"><use href="#i-compass"/></svg><h3>Nie wiesz, od czego zacząć? Porozmawiajmy.</h3><p>Niezależnie od tego, czy szukasz konkretnej polisy, czy dopiero rozważasz możliwości – pomożemy Ci określić, czego potrzebujesz i znaleźć polisę, która zapewni Ci odpowiednią ochronę.</p><a class="btn btn--light" href="#kontakt" data-topic="Inne / jeszcze nie wiem">Napisz do nas {ic("arrow")}</a></div>
     </div>
     <ol class="rows" aria-label="Usługi" style="list-style:none">{rows_html}</ol>
   </div>
@@ -478,14 +478,14 @@ def index():
       <h2 id="claims-title" style="margin-top:1.1rem">Szkoda to zły moment na czytanie warunków polisy</h2>
       <p>Zadzwoń do nas, a pomożemy Ci ustalić, jak zgłosić szkodę, jakie dokumenty przygotować i na co zwrócić uwagę w kontakcie z towarzystwem ubezpieczeniowym.</p>
       <div class="claims__ctas">
-        <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} {PHONE_SHORT}</a>
-        <a class="btn btn--light" href="pomoc-przy-szkodzie.html">Pierwsze kroki po szkodzie {ic("arrow")}</a>
+        <a class="btn btn--primary" href="#kontakt" data-topic="Szkoda">Potrzebujesz pomocy? Skontaktuj się z nami. {ic("arrow")}</a>
+        <a class="btn btn--light" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} {PHONE_SHORT}</a>
       </div>
     </div>
     <div class="slip">
       <h3>Zaraz po zdarzeniu</h3>
       <ol>{"".join(f"<li><span><b>{t}</b>{d.split('.')[0]}.</span></li>" for t, d in CLAIMS["steps"][:4])}</ol>
-      <a class="link-more" href="pomoc-przy-szkodzie.html"><span>Pełna lista i dokumenty</span>{ic("arrow")}</a>
+      <a class="link-more" href="pomoc-przy-szkodzie.html"><span>Pierwsze kroki po szkodzie</span>{ic("arrow")}</a>
     </div>
   </div>
 </section>
