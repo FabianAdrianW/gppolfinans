@@ -242,8 +242,8 @@ def head(title, desc, canonical, extra=""):
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<meta name="theme-color" content="#F7F4EF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121818" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="only light">
+<meta name="theme-color" content="#F7F4EF">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pl_PL">
 <meta property="og:title" content="{title}">
@@ -253,7 +253,7 @@ def head(title, desc, canonical, extra=""):
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B2E2E'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='21' text-anchor='middle' fill='%23F7F4EF'%3Ep%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1794161105">
+<link rel="stylesheet" href="styles.css?v=1794161936">
 {extra}</head>
 <body>
 <a class="skip" href="#main">Przejdź do treści</a>
@@ -368,7 +368,7 @@ def footer(home=True, has_contact=True):
   <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń</a>
   <a class="btn btn--ghost" href="#kontakt">Napisz</a>
 </div>
-<script src="main.js?v=1794161105" defer></script>
+<script src="main.js?v=1794161936" defer></script>
 </body>
 </html>
 '''
