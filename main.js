@@ -271,7 +271,7 @@
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', moveIndicator);
 
-  /* ---------- Form: Web3Forms, mailto fallback until a key is set ---------- */
+  /* ---------- Form: FormSubmit (AJAX) to the office inbox ---------- */
   const form = $('#form');
   if (form) form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -284,21 +284,22 @@
     if (!consent.checked) { $('#consent-err').textContent = tr('Zaznacz zgodę, żebyśmy mogli odpowiedzieć.', 'Please tick the consent box so we can reply.'); ok = false; }
     if (!ok) { (name.value.trim() ? consent : name).focus(); return; }
     const subject = `${tr('Strona Polfinans', 'Polfinans website (EN)')}: ${$('#topic').value || tr('nowa wiadomość', 'new message')}`;
-    const body = `${name.value}\n${$('#reach').value}\n\n${$('#msg').value}`;
-    const key = form.dataset.key;
-    if (!key || key.startsWith('TODO')) {
-      location.href = `mailto:${form.dataset.mail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      status.textContent = tr('Otworzyliśmy Twój program pocztowy z gotową wiadomością. Wyślij ją stamtąd.', 'We have opened your email app with the message ready. Please send it from there.');
-      return;
-    }
+    const reach = $('#reach').value.trim();
+    const payload = {
+      _subject: subject, _template: 'table', _captcha: 'false',
+      'Imię i nazwisko': name.value.trim(), 'Telefon / e-mail': reach,
+      'Temat': $('#topic').value, 'Wiadomość': $('#msg').value,
+      'Wersja strony': tr('PL', 'EN')
+    };
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reach)) payload._replyto = reach;
     btn.setAttribute('aria-busy', 'true'); status.textContent = tr('Wysyłamy…', 'Sending…');
     try {
-      const r = await fetch('https://api.web3forms.com/submit', {
+      const r = await fetch(`https://formsubmit.co/ajax/${form.dataset.mail}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ access_key: key, subject, from_name: 'Strona Polfinans', name: name.value, kontakt: $('#reach').value, temat: $('#topic').value, message: $('#msg').value })
+        body: JSON.stringify(payload)
       });
       const j = await r.json();
-      if (!j.success) throw new Error(j.message);
+      if (!r.ok || String(j.success) !== 'true') throw new Error(j.message);
       form.reset(); status.classList.add('is-ok');
       status.textContent = tr('Dziękujemy. Wiadomość dotarła, odezwiemy się wkrótce.', 'Thank you. Your message has arrived and we will be in touch soon.');
     } catch {

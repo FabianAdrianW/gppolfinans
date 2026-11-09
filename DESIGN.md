@@ -23,7 +23,7 @@ Wszystkie z materiałów klientki (moodboard v7, WhatsApp 22:01:41–44). To ilu
 Strony EN generuje build.py do /en/ (te same nazwy plików). Treści obszarów i szkody oraz teksty szablonów są w content_en.py (słownik UI: polski tekst → angielski, podmieniany po wygenerowaniu). Przełącznik PL/EN w navbarze (pigułka przesuwa się, potem przejście na odpowiednik strony), hreflang pl/en/x-default. Po zmianie polskiego tekstu w szablonie dopisz jego tłumaczenie w UI, inaczej na /en/ zostanie po polsku.
 
 ## Do uzupełnienia (TODO w kodzie)
-- Klucz Web3Forms (build.py: WEB3FORMS_KEY). Do tego czasu formularz otwiera program pocztowy (mailto).
+- Formularz: FormSubmit (formsubmit.co/ajax/biuro@gppolfinans.pl). Pierwsze zgłoszenie wysyła na biuro@ e-mail aktywacyjny – trzeba kliknąć „Activate Form”. Do aktywacji wysyłka zwraca błąd i strona pokazuje telefon/e-mail.
 - Nr wpisu w rejestrze pośredników KNF (RPU), NIP, pełna nazwa administratora danych (stopka, prywatnosc.html).
 - Podpis "Strona: Adrian Wojtasik" w stopce — do potwierdzenia.
 - Prawdziwe zdjęcia zespołu/biura, jeśli mają się pojawić.

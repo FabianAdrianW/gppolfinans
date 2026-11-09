@@ -11,7 +11,6 @@ FIRM = "Anna Wojda „POLFINANS”"; NIP = "898-132-68-85"; REGON = "020499082";
 KNF_URL = "https://rpu.knf.gov.pl/search/agent/11200056%2FA/353623"
 FB = "https://www.facebook.com/Polfinans.ubezpieczenia"
 L = "pl"   # current build language, set in main()
-WEB3FORMS_KEY = "TODO_WEB3FORMS_KEY"   # TODO: klucz z web3forms.com założony na biuro@gppolfinans.pl
 
 ICONS = {
  "home":'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
@@ -259,7 +258,7 @@ def head(title, desc, canonical, extra=""):
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B2E2E'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='21' text-anchor='middle' fill='%23F7F4EF'%3Ep%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1794211000">
+<link rel="stylesheet" href="styles.css?v=1794229000">
 {extra}</head>
 <body>
 <a class="skip" href="#main">Przejdź do treści</a>
@@ -318,7 +317,7 @@ def contact(topic=""):
         <li><a class="line" href="{MAPS}" target="_blank" rel="noopener">{ic("pin")}<div><small>Biuro</small><span>{ADDR1}, {ADDR2}</span></div><span class="line__go">{ic("arrow")}</span></a></li>
       </ul>
     </div>
-    <form class="form" id="form" novalidate data-key="{WEB3FORMS_KEY}" data-mail="{MAIL}">
+    <form class="form" id="form" novalidate data-mail="{MAIL}">
       <h3>Napisz do nas</h3>
       <div class="form__pair">
         <div class="field" id="f-name">
@@ -388,7 +387,7 @@ def footer(home=True, has_contact=True):
   <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń</a>
   <a class="btn btn--ghost" href="#kontakt">Napisz</a>
 </div>
-<script src="main.js?v=1794211000" defer></script>
+<script src="main.js?v=1794229000" defer></script>
 </body>
 </html>
 '''
@@ -642,7 +641,7 @@ def privacy():
     <h2>Jakie dane i po co</h2>
     <p>Przetwarzamy dane, które sam wpiszesz w formularzu: imię i nazwisko, telefon lub e-mail i treść wiadomości. Używamy ich tylko po to, żeby odpowiedzieć i umówić rozmowę. Podstawą jest Twoja zgoda (art. 6 ust. 1 lit. a RODO) oraz działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO).</p>
     <h2>Komu je przekazujemy</h2>
-    <p>Wiadomość z formularza trafia na naszą skrzynkę przez usługę Web3Forms, która działa jako podmiot przetwarzający. Danych nie sprzedajemy i nie używamy do reklam.</p>
+    <p>Wiadomość z formularza trafia na naszą skrzynkę przez usługę FormSubmit (formsubmit.co), która działa jako podmiot przetwarzający. Danych nie sprzedajemy i nie używamy do reklam.</p>
     <h2>Jak długo</h2>
     <p>Przechowujemy wiadomość tak długo, jak trwa rozmowa w Twojej sprawie, a jeśli dojdzie do współpracy, przez okres wymagany przepisami.</p>
     <h2>Twoje prawa</h2>

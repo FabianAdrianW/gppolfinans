@@ -345,8 +345,8 @@ UI = {
  'Przetwarzamy dane, które sam wpiszesz w formularzu: imię i nazwisko, telefon lub e-mail i treść wiadomości. Używamy ich tylko po to, żeby odpowiedzieć i umówić rozmowę. Podstawą jest Twoja zgoda (art. 6 ust. 1 lit. a RODO) oraz działania przed zawarciem umowy na Twoje żądanie (art. 6 ust. 1 lit. b RODO).':
    'We process the data you enter in the form yourself: your name, phone number or email, and your message. We use it only to reply and arrange a conversation. The legal basis is your consent (Art. 6(1)(a) GDPR) and steps taken at your request before entering into a contract (Art. 6(1)(b) GDPR).',
  '<h2>Komu je przekazujemy</h2>': '<h2>Who we share it with</h2>',
- 'Wiadomość z formularza trafia na naszą skrzynkę przez usługę Web3Forms, która działa jako podmiot przetwarzający. Danych nie sprzedajemy i nie używamy do reklam.':
-   'Messages from the form reach our inbox through the Web3Forms service, which acts as a data processor. We do not sell your data or use it for advertising.',
+ 'Wiadomość z formularza trafia na naszą skrzynkę przez usługę FormSubmit (formsubmit.co), która działa jako podmiot przetwarzający. Danych nie sprzedajemy i nie używamy do reklam.':
+   'Messages from the form reach our inbox through the FormSubmit service (formsubmit.co), which acts as a data processor. We do not sell your data or use it for advertising.',
  '<h2>Jak długo</h2>': '<h2>How long</h2>',
  'Przechowujemy wiadomość tak długo, jak trwa rozmowa w Twojej sprawie, a jeśli dojdzie do współpracy, przez okres wymagany przepisami.':
    'We keep your message for as long as we are dealing with your enquiry and, if we start working together, for the period required by law.',
