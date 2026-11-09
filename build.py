@@ -9,6 +9,8 @@ ADDR1 = "ul. Metalowców 9, pok. 110"; ADDR2 = "54-156 Wrocław"
 MAPS = "https://www.google.com/maps/search/?api=1&query=Metalowc%C3%B3w+9+54-156+Wroc%C5%82aw"
 FIRM = "Anna Wojda „POLFINANS”"; NIP = "898-132-68-85"; REGON = "020499082"; KNF_NO = "11200056/A"
 KNF_URL = "https://rpu.knf.gov.pl/search/agent/11200056%2FA/353623"
+FB = "https://www.facebook.com/Polfinans.ubezpieczenia"
+L = "pl"   # current build language, set in main()
 WEB3FORMS_KEY = "TODO_WEB3FORMS_KEY"   # TODO: klucz z web3forms.com założony na biuro@gppolfinans.pl
 
 ICONS = {
@@ -36,6 +38,7 @@ ICONS = {
  "folder":'<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>',
  "copy":'<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
 }
+FB_SVG = '<svg class="fb" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07"/></svg>'
 def ic(name, cls=""):
     c = f' class="{cls}"' if cls else ""
     return f'<svg{c} aria-hidden="true" focusable="false"><use href="#i-{name}"/></svg>'
@@ -104,9 +107,9 @@ AREAS = [
  dict(slug="zycie", icon="heart", img="area-zycie", name="Życie", topic="Życie",
    card="Bliscy, kredyt i zobowiązania, które zostają na lata.",
    title="Ubezpieczenie na życie", seo="Ubezpieczenie na życie, Wrocław",
-   lead="To ochrona dla Ciebie i osób, które są dla Ciebie najważniejsze. Zapewnia finansowe wsparcie bliskim, pomaga zabezpieczyć zobowiązania i daje poczucie bezpieczeństwa na przyszłość. <br><br><strong>Zadbaj o bezpieczeństwo swoje i tych, na których Ci zależy.</strong>",
+   lead="To ochrona dla Ciebie i osób, które są dla Ciebie najważniejsze. Zapewnia finansowe wsparcie bliskim, pomaga zabezpieczyć zobowiązania i daje poczucie bezpieczeństwa na przyszłość.<br class='keep'><br class='keep'>Zakres polisy możemy rozszerzyć o dodatkowe pakiety chroniące m.in. na wypadek poważnego zachorowania, pobytu w szpitalu czy następstw nieszczęśliwych wypadków (NNW). Dostępne rozwiązania mogą obejmować również assistance, zapewniające praktyczną pomoc medyczną i organizacyjną w trudnych sytuacjach.<br class='keep'><br class='keep'>Dobierzemy sumę ubezpieczenia i zakres ochrony do Twojej sytuacji, potrzeb rodziny, zobowiązań finansowych i planów na przyszłość.<br class='keep'><br class='keep'><strong>Zadbaj o bezpieczeństwo swoje i tych, na których Ci zależy.</strong>",
    note=("Zabezpiecz dziś to, co ważne jutro.", "Z myślą o tych, którzy są dla Ciebie najważniejsi."),
-   when_lead="Zakres polisy możemy rozszerzyć o dodatkowe pakiety chroniące m.in. na wypadek poważnego zachorowania, pobytu w szpitalu czy następstw nieszczęśliwych wypadków (NNW). Dostępne rozwiązania mogą obejmować również assistance, zapewniające praktyczną pomoc medyczną i organizacyjną w trudnych sytuacjach.<br><br>Dobierzemy sumę ubezpieczenia i zakres ochrony do Twojej sytuacji, potrzeb rodziny, zobowiązań finansowych i planów na przyszłość.<br><br>W życiu pojawiają się momenty, w których warto pomyśleć o dodatkowym zabezpieczeniu. Ubezpieczenie na życie warto rozważyć szczególnie wtedy, gdy:",
+   when_lead="W życiu pojawiają się momenty, w których warto pomyśleć o dodatkowym zabezpieczeniu.<br><br>Ubezpieczenie na życie warto rozważyć szczególnie wtedy, gdy:",
    alt="Rodzina przygotowuje razem posiłek w kuchni",
    when=["Masz rodzinę i chcesz zapewnić bliskim zabezpieczenie finansowe.",
          "Planujesz zakup mieszkania lub spłacasz kredyt hipoteczny.",
@@ -249,11 +252,14 @@ def head(title, desc, canonical, extra=""):
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:image" content="img/hero-dom.webp">
-<link rel="canonical" href="https://gppolfinans.pl/{canonical}">
+<link rel="canonical" href="https://gppolfinans.pl/{"en/" if L == "en" else ""}{canonical}">
+<link rel="alternate" hreflang="pl" href="https://gppolfinans.pl/{canonical}">
+<link rel="alternate" hreflang="en" href="https://gppolfinans.pl/en/{canonical}">
+<link rel="alternate" hreflang="x-default" href="https://gppolfinans.pl/{canonical}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B2E2E'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='21' text-anchor='middle' fill='%23F7F4EF'%3Ep%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1794161936">
+<link rel="stylesheet" href="styles.css?v=1794211000">
 {extra}</head>
 <body>
 <a class="skip" href="#main">Przejdź do treści</a>
@@ -262,7 +268,7 @@ def head(title, desc, canonical, extra=""):
 
 LOGO = '<span class="logo__word">polf<i>i</i>nans</span><span class="logo__sub">Grupa Partnerska</span>'
 
-def nav(home=True, current=None):
+def nav(home=True, current=None, page=""):
     p = "" if home else "index.html"
     items = [("obszary","Ubezpieczenia"),("proces","Nasze podejście"),("szkoda","Szkoda"),("o-nas","O nas"),("kontakt","Kontakt")]
     def cur(k):
@@ -275,6 +281,7 @@ def nav(home=True, current=None):
     <a class="logo" href="{'#top' if home else 'index.html'}" aria-label="Polfinans Grupa Partnerska, strona główna">{LOGO}</a>
     <ul class="nav__links" id="navLinks">{lis}<span class="nav__indicator" aria-hidden="true"></span></ul>
     <div class="nav__actions">
+      {lang_switch(page)}
       <button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Otwórz menu"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -284,6 +291,18 @@ def nav(home=True, current=None):
   {drawer}
 </nav>
 '''
+
+def lang_switch(page):
+    pl_href = ("../" + page) if L == "en" else "#top"
+    en_href = "#top" if L == "en" else ("en/" + page)
+    if L == "en" and not page: pl_href = "../"
+    if L == "pl" and not page: en_href = "en/"
+    cur_pl = ' aria-current="true"' if L == "pl" else ""
+    cur_en = ' aria-current="true"' if L == "en" else ""
+    return (f'<div class="lang{" lang--en" if L == "en" else ""}" role="group" aria-label="Język / Language">'
+            f'<a class="lang__opt" href="{pl_href}" lang="pl" hreflang="pl"{cur_pl} title="Polski">PL</a>'
+            f'<a class="lang__opt" href="{en_href}" lang="en" hreflang="en"{cur_en} title="English">EN</a>'
+            '<span class="lang__pill" aria-hidden="true"></span></div>')
 
 def contact(topic=""):
     opts = '<option value="">Wybierz temat</option>' + "".join(f'<option{" selected" if t == topic else ""}>{t}</option>' for t in TOPICS)
@@ -354,6 +373,7 @@ def footer(home=True, has_contact=True):
         <li><a href="tel:{PHONE_TEL}">{PHONE}</a></li>
         <li><a href="mailto:{MAIL}">{MAIL}</a></li>
         <li><a href="{MAPS}" target="_blank" rel="noopener">{ADDR1}, {ADDR2}</a></li>
+        <li><a class="footer__fb" href="{FB}" target="_blank" rel="noopener">{FB_SVG}<span>Facebook</span></a></li>
       </ul></div>
     </div>
     <p class="footer__legal">{FIRM} · NIP {NIP} · REGON {REGON} · Agent ubezpieczeniowy wpisany do rejestru pośredników ubezpieczeniowych KNF pod nr <a href="{KNF_URL}" target="_blank" rel="noopener">{KNF_NO}</a></p>
@@ -368,7 +388,7 @@ def footer(home=True, has_contact=True):
   <a class="btn btn--primary" href="tel:{PHONE_TEL}">{ic("phone","i-phone")} Zadzwoń</a>
   <a class="btn btn--ghost" href="#kontakt">Napisz</a>
 </div>
-<script src="main.js?v=1794161936" defer></script>
+<script src="main.js?v=1794211000" defer></script>
 </body>
 </html>
 '''
@@ -398,11 +418,13 @@ def index():
     steps_html = "".join(f'<li class="step{" is-active" if i == 0 else ""}"><button type="button" aria-controls="photos" aria-pressed="{"true" if i == 0 else "false"}"><span class="step__num" aria-hidden="true"></span><span class="step__t">{t}</span><span class="step__d">{d}</span><span class="step__bar" aria-hidden="true"></span></button><span class="unfold step__ph"><span class="unfold__in"><span class="reveal">{picture(img, alt).replace('sizes="(min-width:960px) 50vw, 100vw"', 'sizes="100vw"')}</span></span></span></li>' for i, (t, d, img, alt) in enumerate(steps))
     photos = "".join(picture(img, alt, cls="is-active" if i == 0 else "") for i, (_, _, img, alt) in enumerate(steps)).replace('loading="lazy" ', '')
     ld = {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Polfinans Grupa Partnerska","url":"https://gppolfinans.pl/","telephone":PHONE,"email":MAIL,
-          "address":{"@type":"PostalAddress","streetAddress":ADDR1,"postalCode":"54-156","addressLocality":"Wrocław","addressCountry":"PL"},"areaServed":"Wrocław"}
+          "address":{"@type":"PostalAddress","streetAddress":ADDR1,"postalCode":"54-156","addressLocality":"Wrocław","addressCountry":"PL"},
+          "hasMap":MAPS,"areaServed":"Wrocław","legalName":"Anna Wojda POLFINANS","vatID":"PL"+NIP.replace("-",""),"sameAs":[FB],
+          "image":"https://gppolfinans.pl/img/hero-dom.webp","inLanguage":["pl","en"]}
     extra = f'<link rel="preload" as="image" href="img/hero-dom-800.webp" imagesrcset="img/hero-dom-800.webp 800w, img/hero-dom.webp 1600w" imagesizes="(min-width:960px) 50vw, 100vw">\n<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
     return head("Polfinans Grupa Partnerska | Doradztwo ubezpieczeniowe, Wrocław",
                 "Multiagencja ubezpieczeniowa z Wrocławia. Porównujemy oferty kilku towarzystw, pomagamy zawrzeć umowę i przejść przez szkodę. Dom, samochód, życie, podróże, firma, gospodarstwo.",
-                "", extra) + nav(True) + f'''
+                "", extra) + nav(True, page="") + f'''
 <main id="main">
 <section class="hero" id="top" aria-labelledby="hero-title">
   <div class="hero__inner">
@@ -573,7 +595,7 @@ def subpage(a, claims=False):
     lead_txt = re.sub(r"<[^>]+>", " ", a["lead"]); lead_txt = re.sub(r"\s+", " ", lead_txt).strip()
     note_t, note_s = ("Spokojnie, krok po kroku.", "Powiemy, co zrobić w pierwszej kolejności.") if claims else a["note"]
     note_html = f'<strong>{note_t}</strong>' + (f'<span>{note_s}</span>' if note_s else "")
-    return head(f'{a["seo"]} | Polfinans', lead_txt[:155], f'{a["slug"]}.html') + nav(False, "szkoda" if claims else "obszary") + f'''
+    return head(f'{a["seo"]} | Polfinans', lead_txt[:155], f'{a["slug"]}.html') + nav(False, "szkoda" if claims else "obszary", page=f'{a["slug"]}.html') + f'''
 <main id="main">
 <section class="hero page-hero" id="top" aria-labelledby="hero-title">
   <div class="hero__inner">
@@ -609,7 +631,7 @@ def subpage(a, claims=False):
 ''' + footer(False)
 
 def privacy():
-    return head("Polityka prywatności | Polfinans", "Jak Polfinans przetwarza dane przesłane przez formularz kontaktowy.", "prywatnosc.html") + nav(False) + f'''
+    return head("Polityka prywatności | Polfinans", "Jak Polfinans przetwarza dane przesłane przez formularz kontaktowy.", "prywatnosc.html") + nav(False, page="prywatnosc.html") + f'''
 <main id="main">
 <section class="section sub" style="padding-top:calc(var(--nav-h) + 4rem)">
   <div class="wrap legal">
@@ -632,12 +654,31 @@ def privacy():
 </main>
 ''' + footer(False, has_contact=False)
 
-def main():
-    (ROOT / "index.html").write_text(index(), encoding="utf-8")
+def pages():
+    yield "index.html", index()
     for a in AREAS:
-        (ROOT / f'{a["slug"]}.html').write_text(subpage(a), encoding="utf-8")
-    (ROOT / f'{CLAIMS["slug"]}.html').write_text(subpage(CLAIMS, claims=True), encoding="utf-8")
-    (ROOT / "prywatnosc.html").write_text(privacy(), encoding="utf-8")
+        yield f'{a["slug"]}.html', subpage(a)
+    yield f'{CLAIMS["slug"]}.html', subpage(CLAIMS, claims=True)
+    yield "prywatnosc.html", privacy()
+
+ASSET = re.compile(r'(?<=["\s,])(img/|fonts/|styles\.css|main\.js)')
+def to_en(html):
+    import content_en as E
+    for k in sorted(E.UI, key=len, reverse=True):
+        html = html.replace(k, E.UI[k])
+    return ASSET.sub(r"../\1", html)
+
+def main():
+    global L, AREAS, CLAIMS, TOPICS, FAQ_LEAD
+    for name, html in pages():
+        (ROOT / name).write_text(html, encoding="utf-8")
+    import content_en as E
+    L = "en"
+    AREAS = [{**a, **E.AREAS[a["slug"]]} for a in AREAS]
+    CLAIMS = {**CLAIMS, **E.CLAIMS}; TOPICS = E.TOPICS; FAQ_LEAD = E.FAQ_LEAD
+    (ROOT / "en").mkdir(exist_ok=True)
+    for name, html in pages():
+        (ROOT / "en" / name).write_text(to_en(html), encoding="utf-8")
     print("ok")
 
 if __name__ == "__main__":

@@ -19,6 +19,9 @@ Hover/ruch: hero 3D tilt + nota w przeciwną stronę; obszary jako indeks z lepk
 ## Zdjęcia
 Wszystkie z materiałów klientki (moodboard v7, WhatsApp 22:01:41–44). To ilustracje kierunku marki (generowane), nie zdjęcia zespołu ani biura — przy procesie podpis "Ilustracja kierunku marki". Pominięte: 22:01:45 (wygląda na zdjęcie stockowe z obcej strony), 22:01:46 (niska rozdzielczość).
 
+## Wersja angielska
+Strony EN generuje build.py do /en/ (te same nazwy plików). Treści obszarów i szkody oraz teksty szablonów są w content_en.py (słownik UI: polski tekst → angielski, podmieniany po wygenerowaniu). Przełącznik PL/EN w navbarze (pigułka przesuwa się, potem przejście na odpowiednik strony), hreflang pl/en/x-default. Po zmianie polskiego tekstu w szablonie dopisz jego tłumaczenie w UI, inaczej na /en/ zostanie po polsku.
+
 ## Do uzupełnienia (TODO w kodzie)
 - Klucz Web3Forms (build.py: WEB3FORMS_KEY). Do tego czasu formularz otwiera program pocztowy (mailto).
 - Nr wpisu w rejestrze pośredników KNF (RPU), NIP, pełna nazwa administratora danych (stopka, prywatnosc.html).

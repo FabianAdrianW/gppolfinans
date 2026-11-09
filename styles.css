@@ -505,5 +505,29 @@ ul{margin:0}
 .about__logo .logo__sub{font-size:clamp(.8rem,.6rem + .5vw,1.05rem);margin-top:.7rem}
 .footer .logo__word{font-size:1.9rem}
 .checklist strong{font-weight:600;color:var(--ink)}
-@media (max-width:640px){.hero__lead br{display:none}}
+@media (max-width:640px){.hero__lead br:not(.keep){display:none}}
 .hero h1.h1--long{font-size:clamp(2.1rem,1rem + 2.3vw,3.55rem);max-width:21ch;line-height:1.08}
+
+/* ---------- Language switch PL / EN ---------- */
+.lang{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;align-items:center;padding:.2rem;border-radius:999px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 70%,transparent);isolation:isolate}
+.lang__opt{position:relative;z-index:1;display:grid;place-items:center;min-width:2.6rem;min-height:2.2rem;padding:0 .55rem;border-radius:999px;font:600 .82rem/1 var(--sans);letter-spacing:.06em;color:var(--muted);text-decoration:none;transition:color .25s var(--ease-out)}
+.lang__opt::after{content:"";position:absolute;inset:-.3rem -.1rem}  /* 44px touch target */
+.lang__opt[aria-current]{color:#fff}
+.lang__pill{position:absolute;z-index:0;top:.2rem;bottom:.2rem;left:.2rem;width:calc(50% - .2rem);border-radius:999px;background:var(--btn);box-shadow:0 4px 12px rgba(139,46,46,.25);transition:transform .32s var(--ease-out)}
+.lang--en .lang__pill{transform:translateX(100%)}
+.lang.is-switching .lang__pill{transform:translateX(100%)}
+.lang--en.is-switching .lang__pill{transform:translateX(0)}
+.lang.is-switching .lang__opt[aria-current]{color:var(--muted)}
+.lang.is-switching .lang__opt:not([aria-current]){color:#fff}
+.lang__opt:focus-visible{outline:2px solid var(--wine);outline-offset:2px}
+@media (hover:hover){.lang__opt:not([aria-current]):hover{color:var(--wine)}}
+@media (max-width:359px){.lang__opt{min-width:2.3rem;padding:0 .4rem}}
+
+/* ---------- Footer: Facebook ---------- */
+.footer__fb{display:inline-flex;align-items:center;gap:.55rem}
+.footer__fb .fb{width:1.15rem;height:1.15rem;flex:none;color:var(--wine);transition:transform .35s var(--ease-out)}
+@media (hover:hover){.footer__fb:hover .fb{transform:translateY(-2px) scale(1.08)}}
+
+@media (prefers-reduced-motion:reduce){.lang__pill,.lang__opt,.footer__fb .fb{transition:none}}
+body main{transition:opacity .26s ease,transform .26s var(--ease-out)}
+body.is-leaving main{opacity:0;transform:translateY(6px)}

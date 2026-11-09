@@ -4,6 +4,8 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const touch = matchMedia('(hover: none)').matches;
+  const EN = document.documentElement.lang === 'en';
+  const tr = (pl, en) => EN ? en : pl;
 
   /* ---------- Navbar: scrolled state, sliding indicator, active section ---------- */
   const nav = $('#nav'), callbar = $('#callbar'), contact = $('#kontakt');
@@ -43,12 +45,24 @@
   }
   requestAnimationFrame(moveIndicator);
 
+  /* ---------- Language switch: pill slides, then navigate ---------- */
+  $$('.lang__opt:not([aria-current])').forEach(a => a.addEventListener('click', e => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || reduce) return;
+    e.preventDefault();
+    const href = a.href + (location.hash || '');
+    try { localStorage.setItem('lang', a.lang); } catch {}
+    a.closest('.lang').classList.add('is-switching');
+    document.body.classList.add('is-leaving');
+    setTimeout(() => { location.href = href; }, 260);
+  }));
+  window.addEventListener('pageshow', () => { $$('.lang.is-switching').forEach(l => l.classList.remove('is-switching')); document.body.classList.remove('is-leaving'); });
+
   /* ---------- Mobile drawer ---------- */
   const burger = $('.burger'), drawer = $('#drawer');
   const setDrawer = open => {
     drawer.classList.toggle('is-open', open);
     burger.setAttribute('aria-expanded', String(open));
-    burger.setAttribute('aria-label', open ? 'Zamknij menu' : 'Otwórz menu');
+    burger.setAttribute('aria-label', open ? tr('Zamknij menu', 'Close menu') : tr('Otwórz menu', 'Open menu'));
     document.body.style.overflow = open ? 'hidden' : '';
     if (open) $('a', drawer).focus({ preventScroll: true });
   };
@@ -239,7 +253,7 @@
     if (!meter) return;
     const upd = () => {
       const n = boxes.filter(b => b.checked).length;
-      $('[data-count]', meter).textContent = n === boxes.length ? 'Wszystko gotowe. Możemy rozmawiać.' : `Gotowe: ${n} z ${boxes.length}`;
+      $('[data-count]', meter).textContent = n === boxes.length ? tr('Wszystko gotowe. Możemy rozmawiać.', 'All set. We can talk.') : tr(`Gotowe: ${n} z ${boxes.length}`, `Ready: ${n} of ${boxes.length}`);
       $('b', meter).style.setProperty('--p', n / boxes.length);
     };
     boxes.forEach(b => b.addEventListener('change', upd));
@@ -249,7 +263,7 @@
   $$('[data-copy]').forEach(a => a.addEventListener('click', e => {
     if (!e.altKey || !navigator.clipboard) return;
     e.preventDefault();
-    navigator.clipboard.writeText(a.dataset.copy).then(() => { const s = $('span', a); const t = s.textContent; s.textContent = 'Skopiowano adres'; setTimeout(() => s.textContent = t, 1600); });
+    navigator.clipboard.writeText(a.dataset.copy).then(() => { const s = $('span', a); const t = s.textContent; s.textContent = tr('Skopiowano adres', 'Address copied'); setTimeout(() => s.textContent = t, 1600); });
   }));
 
   /* ---------- Mobile call bar ---------- */
@@ -266,18 +280,18 @@
     let ok = true;
     $('#name-err').textContent = ''; $('#consent-err').textContent = ''; $('#f-name').classList.remove('has-error');
     status.textContent = ''; status.classList.remove('is-ok');
-    if (!name.value.trim()) { $('#name-err').textContent = 'Wpisz imię i nazwisko.'; $('#f-name').classList.add('has-error'); ok = false; }
-    if (!consent.checked) { $('#consent-err').textContent = 'Zaznacz zgodę, żebyśmy mogli odpowiedzieć.'; ok = false; }
+    if (!name.value.trim()) { $('#name-err').textContent = tr('Wpisz imię i nazwisko.', 'Please enter your name.'); $('#f-name').classList.add('has-error'); ok = false; }
+    if (!consent.checked) { $('#consent-err').textContent = tr('Zaznacz zgodę, żebyśmy mogli odpowiedzieć.', 'Please tick the consent box so we can reply.'); ok = false; }
     if (!ok) { (name.value.trim() ? consent : name).focus(); return; }
-    const subject = `Strona Polfinans: ${$('#topic').value || 'nowa wiadomość'}`;
+    const subject = `${tr('Strona Polfinans', 'Polfinans website (EN)')}: ${$('#topic').value || tr('nowa wiadomość', 'new message')}`;
     const body = `${name.value}\n${$('#reach').value}\n\n${$('#msg').value}`;
     const key = form.dataset.key;
     if (!key || key.startsWith('TODO')) {
       location.href = `mailto:${form.dataset.mail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      status.textContent = 'Otworzyliśmy Twój program pocztowy z gotową wiadomością. Wyślij ją stamtąd.';
+      status.textContent = tr('Otworzyliśmy Twój program pocztowy z gotową wiadomością. Wyślij ją stamtąd.', 'We have opened your email app with the message ready. Please send it from there.');
       return;
     }
-    btn.setAttribute('aria-busy', 'true'); status.textContent = 'Wysyłamy…';
+    btn.setAttribute('aria-busy', 'true'); status.textContent = tr('Wysyłamy…', 'Sending…');
     try {
       const r = await fetch('https://api.web3forms.com/submit', {
         method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -286,9 +300,9 @@
       const j = await r.json();
       if (!j.success) throw new Error(j.message);
       form.reset(); status.classList.add('is-ok');
-      status.textContent = 'Dziękujemy. Wiadomość dotarła, odezwiemy się wkrótce.';
+      status.textContent = tr('Dziękujemy. Wiadomość dotarła, odezwiemy się wkrótce.', 'Thank you. Your message has arrived and we will be in touch soon.');
     } catch {
-      status.innerHTML = `Nie udało się wysłać. Zadzwoń: <a href="tel:+48504031330">504 031 330</a> albo napisz na <a href="mailto:${form.dataset.mail}">${form.dataset.mail}</a>.`;
+      status.innerHTML = tr(`Nie udało się wysłać. Zadzwoń: <a href="tel:+48504031330">504 031 330</a> albo napisz na <a href="mailto:${form.dataset.mail}">${form.dataset.mail}</a>.`, `Sending failed. Call <a href="tel:+48504031330">+48 504 031 330</a> or write to <a href="mailto:${form.dataset.mail}">${form.dataset.mail}</a>.`);
     } finally { btn.removeAttribute('aria-busy'); }
   });
 
