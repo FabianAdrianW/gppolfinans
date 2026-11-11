@@ -251,10 +251,10 @@ def head(title, desc, canonical, extra=""):
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:image" content="img/hero-dom.webp">
-<link rel="canonical" href="https://gppolfinans.pl/{"en/" if L == "en" else ""}{canonical}">
-<link rel="alternate" hreflang="pl" href="https://gppolfinans.pl/{canonical}">
-<link rel="alternate" hreflang="en" href="https://gppolfinans.pl/en/{canonical}">
-<link rel="alternate" hreflang="x-default" href="https://gppolfinans.pl/{canonical}">
+<link rel="canonical" href="https://www.gppolfinans.pl/{"en/" if L == "en" else ""}{canonical}">
+<link rel="alternate" hreflang="pl" href="https://www.gppolfinans.pl/{canonical}">
+<link rel="alternate" hreflang="en" href="https://www.gppolfinans.pl/en/{canonical}">
+<link rel="alternate" hreflang="x-default" href="https://www.gppolfinans.pl/{canonical}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B2E2E'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='21' text-anchor='middle' fill='%23F7F4EF'%3Ep%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -416,10 +416,10 @@ def index():
              ("Zawarcie ubezpieczenia i dalsze wsparcie","Pomagamy w zawarciu umowy i pozostajemy do Twojej dyspozycji również po zakupie polisy – przy aktualizacji ochrony i w przypadku szkody.","step-4","Doradca wskazuje klientce miejsce na dokumencie")]
     steps_html = "".join(f'<li class="step{" is-active" if i == 0 else ""}"><button type="button" aria-controls="photos" aria-pressed="{"true" if i == 0 else "false"}"><span class="step__num" aria-hidden="true"></span><span class="step__t">{t}</span><span class="step__d">{d}</span><span class="step__bar" aria-hidden="true"></span></button><span class="unfold step__ph"><span class="unfold__in"><span class="reveal">{picture(img, alt).replace('sizes="(min-width:960px) 50vw, 100vw"', 'sizes="100vw"')}</span></span></span></li>' for i, (t, d, img, alt) in enumerate(steps))
     photos = "".join(picture(img, alt, cls="is-active" if i == 0 else "") for i, (_, _, img, alt) in enumerate(steps)).replace('loading="lazy" ', '')
-    ld = {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Polfinans Grupa Partnerska","url":"https://gppolfinans.pl/","telephone":PHONE,"email":MAIL,
+    ld = {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Polfinans Grupa Partnerska","url":"https://www.gppolfinans.pl/","telephone":PHONE,"email":MAIL,
           "address":{"@type":"PostalAddress","streetAddress":ADDR1,"postalCode":"54-156","addressLocality":"Wrocław","addressCountry":"PL"},
           "hasMap":MAPS,"areaServed":"Wrocław","legalName":"Anna Wojda POLFINANS","vatID":"PL"+NIP.replace("-",""),"sameAs":[FB],
-          "image":"https://gppolfinans.pl/img/hero-dom.webp","inLanguage":["pl","en"]}
+          "image":"https://www.gppolfinans.pl/img/hero-dom.webp","inLanguage":["pl","en"]}
     extra = f'<link rel="preload" as="image" href="img/hero-dom-800.webp" imagesrcset="img/hero-dom-800.webp 800w, img/hero-dom.webp 1600w" imagesizes="(min-width:960px) 50vw, 100vw">\n<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
     return head("Polfinans Grupa Partnerska | Doradztwo ubezpieczeniowe, Wrocław",
                 "Multiagencja ubezpieczeniowa z Wrocławia. Porównujemy oferty kilku towarzystw, pomagamy zawrzeć umowę i przejść przez szkodę. Dom, samochód, życie, podróże, firma, gospodarstwo.",
