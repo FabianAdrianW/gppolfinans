@@ -195,8 +195,8 @@ UI = {
  '<html lang="pl">': '<html lang="en">',
  '<meta property="og:locale" content="pl_PL">': '<meta property="og:locale" content="en_GB">\n<meta property="og:locale:alternate" content="pl_PL">',
  'Polfinans Grupa Partnerska | Doradztwo ubezpieczeniowe, Wrocław': 'Polfinans Grupa Partnerska | Insurance advice, Wrocław',
- 'Multiagencja ubezpieczeniowa z Wrocławia. Porównujemy oferty kilku towarzystw, pomagamy zawrzeć umowę i przejść przez szkodę. Dom, samochód, życie, podróże, firma, gospodarstwo.':
-   'Multi-agency insurance broker in Wrocław. We compare offers from several insurers, help you sign the policy and guide you through a claim. Home, car, life, travel, business, farm.',
+ 'Multiagencja ubezpieczeniowa z Wrocławia. Porównujemy oferty kilku towarzystw, pomagamy zawrzeć umowę i przejść przez szkodę.':
+   'Multi-agency insurance broker in Wrocław. We compare offers from several insurers, help you sign the policy and guide you through a claim.',
  'Polityka prywatności | Polfinans': 'Privacy policy | Polfinans',
  'Jak Polfinans przetwarza dane przesłane przez formularz kontaktowy.': 'How Polfinans processes data sent through the contact form.',
  'Przejdź do treści': 'Skip to content',

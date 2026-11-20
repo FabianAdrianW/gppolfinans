@@ -10,6 +10,7 @@ MAPS = "https://www.google.com/maps/search/?api=1&query=Metalowc%C3%B3w+9+54-156
 FIRM = "Anna Wojda „POLFINANS”"; NIP = "898-132-68-85"; REGON = "020499082"; KNF_NO = "11200056/A"
 KNF_URL = "https://rpu.knf.gov.pl/search/agent/11200056%2FA/353623"
 FB = "https://www.facebook.com/Polfinans.ubezpieczenia"
+SITE = "https://www.gppolfinans.pl"
 L = "pl"   # current build language, set in main()
 
 ICONS = {
@@ -236,6 +237,15 @@ CLAIMS = dict(slug="pomoc-przy-szkodzie", img="step-1", name="Pomoc przy szkodzi
 TOPICS = [a["topic"] for a in AREAS] + ["Szkoda", "Analiza obecnych polis", "Inne / jeszcze nie wiem"]
 
 # ---------------- Partials ----------------
+def short(txt, n=155):
+    """Meta description: cut at sentence end, else at word boundary."""
+    txt = re.sub(r"\s+", " ", txt).strip()
+    if len(txt) <= n: return txt
+    cut = txt[:n]
+    i = max(cut.rfind(". "), cut.rfind("? "), cut.rfind("! "))
+    if i >= 80: return cut[:i + 1]
+    return cut[:cut.rfind(" ")].rstrip(",;:–-") + "…"
+
 def head(title, desc, canonical, extra=""):
     return f'''<!doctype html>
 <html lang="pl">
@@ -247,10 +257,17 @@ def head(title, desc, canonical, extra=""):
 <meta name="color-scheme" content="only light">
 <meta name="theme-color" content="#F7F4EF">
 <meta property="og:type" content="website">
-<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Polfinans">
+<meta property="og:locale" content="{"en_GB" if L == "en" else "pl_PL"}">
+<meta property="og:locale:alternate" content="{"pl_PL" if L == "en" else "en_GB"}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
-<meta property="og:image" content="img/hero-dom.webp">
+<meta property="og:url" content="{SITE}/{"en/" if L == "en" else ""}{canonical}">
+<meta property="og:image" content="{SITE}/img/hero-dom.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{SITE}/img/hero-dom.webp">
 <link rel="canonical" href="https://www.gppolfinans.pl/{"en/" if L == "en" else ""}{canonical}">
 <link rel="alternate" hreflang="pl" href="https://www.gppolfinans.pl/{canonical}">
 <link rel="alternate" hreflang="en" href="https://www.gppolfinans.pl/en/{canonical}">
@@ -416,13 +433,14 @@ def index():
              ("Zawarcie ubezpieczenia i dalsze wsparcie","Pomagamy w zawarciu umowy i pozostajemy do Twojej dyspozycji również po zakupie polisy – przy aktualizacji ochrony i w przypadku szkody.","step-4","Doradca wskazuje klientce miejsce na dokumencie")]
     steps_html = "".join(f'<li class="step{" is-active" if i == 0 else ""}"><button type="button" aria-controls="photos" aria-pressed="{"true" if i == 0 else "false"}"><span class="step__num" aria-hidden="true"></span><span class="step__t">{t}</span><span class="step__d">{d}</span><span class="step__bar" aria-hidden="true"></span></button><span class="unfold step__ph"><span class="unfold__in"><span class="reveal">{picture(img, alt).replace('sizes="(min-width:960px) 50vw, 100vw"', 'sizes="100vw"')}</span></span></span></li>' for i, (t, d, img, alt) in enumerate(steps))
     photos = "".join(picture(img, alt, cls="is-active" if i == 0 else "") for i, (_, _, img, alt) in enumerate(steps)).replace('loading="lazy" ', '')
-    ld = {"@context":"https://schema.org","@type":"InsuranceAgency","name":"Polfinans Grupa Partnerska","url":"https://www.gppolfinans.pl/","telephone":PHONE,"email":MAIL,
+    ld = {"@context":"https://schema.org","@type":"InsuranceAgency","@id":SITE+"/#agency","name":"Polfinans Grupa Partnerska","url":"https://www.gppolfinans.pl/","telephone":PHONE,"email":MAIL,
           "address":{"@type":"PostalAddress","streetAddress":ADDR1,"postalCode":"54-156","addressLocality":"Wrocław","addressCountry":"PL"},
-          "hasMap":MAPS,"areaServed":"Wrocław","legalName":"Anna Wojda POLFINANS","vatID":"PL"+NIP.replace("-",""),"sameAs":[FB],
+          "hasMap":MAPS,"areaServed":["Wrocław","Polska"],"logo":SITE+"/img/hero-dom-800.webp","legalName":"Anna Wojda POLFINANS","vatID":"PL"+NIP.replace("-",""),"sameAs":[FB],
           "image":"https://www.gppolfinans.pl/img/hero-dom.webp","inLanguage":["pl","en"]}
-    extra = f'<link rel="preload" as="image" href="img/hero-dom-800.webp" imagesrcset="img/hero-dom-800.webp 800w, img/hero-dom.webp 1600w" imagesizes="(min-width:960px) 50vw, 100vw">\n<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
+    ld_site = {"@context":"https://schema.org","@type":"WebSite","@id":SITE+"/#website","url":SITE+"/","name":"Polfinans","inLanguage":["pl","en"],"publisher":{"@id":SITE+"/#agency"}}
+    extra = f'<link rel="preload" as="image" href="img/hero-dom-800.webp" imagesrcset="img/hero-dom-800.webp 800w, img/hero-dom.webp 1600w" imagesizes="(min-width:960px) 50vw, 100vw">\n<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n<script type="application/ld+json">{json.dumps(ld_site, ensure_ascii=False)}</script>\n'
     return head("Polfinans Grupa Partnerska | Doradztwo ubezpieczeniowe, Wrocław",
-                "Multiagencja ubezpieczeniowa z Wrocławia. Porównujemy oferty kilku towarzystw, pomagamy zawrzeć umowę i przejść przez szkodę. Dom, samochód, życie, podróże, firma, gospodarstwo.",
+                "Multiagencja ubezpieczeniowa z Wrocławia. Porównujemy oferty kilku towarzystw, pomagamy zawrzeć umowę i przejść przez szkodę.",
                 "", extra) + nav(True, page="") + f'''
 <main id="main">
 <section class="hero" id="top" aria-labelledby="hero-title">
@@ -594,7 +612,13 @@ def subpage(a, claims=False):
     lead_txt = re.sub(r"<[^>]+>", " ", a["lead"]); lead_txt = re.sub(r"\s+", " ", lead_txt).strip()
     note_t, note_s = ("Spokojnie, krok po kroku.", "Powiemy, co zrobić w pierwszej kolejności.") if claims else a["note"]
     note_html = f'<strong>{note_t}</strong>' + (f'<span>{note_s}</span>' if note_s else "")
-    return head(f'{a["seo"]} | Polfinans', lead_txt[:155], f'{a["slug"]}.html') + nav(False, "szkoda" if claims else "obszary", page=f'{a["slug"]}.html') + f'''
+    crumbs = [("Strona główna" if L == "pl" else "Home", f"{SITE}/" + ("en/" if L == "en" else "")), (a["seo"], f"{SITE}/" + ("en/" if L == "en" else "") + f'{a["slug"]}.html')]
+    ld_graph = [{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":i+1,"name":n,"item":u} for i,(n,u) in enumerate(crumbs)]},
+                {"@type":"FAQPage","mainEntity":[{"@type":"Question","name":re.sub(r"<[^>]+>","",q),"acceptedAnswer":{"@type":"Answer","text":re.sub(r"<[^>]+>","",ans)}} for q, ans in a["faq"]]}]
+    if not claims:
+        ld_graph.append({"@type":"Service","name":a["seo"],"serviceType":a["topic"],"description":short(lead_txt, 300),"provider":{"@id":f"{SITE}/#agency"},"areaServed":["Wrocław","Polska" if L == "pl" else "Poland"],"url":crumbs[1][1]})
+    ld_sub = '<script type="application/ld+json">' + json.dumps({"@context":"https://schema.org","@graph":ld_graph}, ensure_ascii=False) + '</script>\n'
+    return head(f'{a["seo"]} | Polfinans', short(lead_txt), f'{a["slug"]}.html', ld_sub) + nav(False, "szkoda" if claims else "obszary", page=f'{a["slug"]}.html') + f'''
 <main id="main">
 <section class="hero page-hero" id="top" aria-labelledby="hero-title">
   <div class="hero__inner">
@@ -667,8 +691,40 @@ def to_en(html):
         html = html.replace(k, E.UI[k])
     return ASSET.sub(r"../\1", html)
 
+def write_seo_files():
+    import datetime
+    today = datetime.date.today().isoformat()
+    slugs = [""] + [f'{a["slug"]}.html' for a in AREAS] + [f'{CLAIMS["slug"]}.html', "prywatnosc.html"]
+    def loc(lang, sl): return f"{SITE}/" + ("en/" if lang == "en" else "") + sl
+    urls = []
+    for sl in slugs:
+        for lang in ("pl", "en"):
+            alt = "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{loc(l, sl)}"/>' for l in ("pl", "en")) + f'<xhtml:link rel="alternate" hreflang="x-default" href="{loc("pl", sl)}"/>'
+            urls.append(f"<url><loc>{loc(lang, sl)}</loc><lastmod>{today}</lastmod>{alt}</url>")
+    (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' + "\n".join(urls) + "\n</urlset>\n", encoding="utf-8")
+    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
+    areas = "\n".join(f"- [{a['name']}]({SITE}/{a['slug']}.html)" for a in AREAS_PL)
+    (ROOT / "llms.txt").write_text(f"""# Polfinans Grupa Partnerska
+
+> Multiagencja ubezpieczeniowa z Wrocławia. Porównujemy oferty kilku towarzystw ubezpieczeniowych, pomagamy zawrzeć umowę i przejść przez szkodę.
+
+Dane firmy: {FIRM}, {ADDR1}, {ADDR2}. NIP {NIP}, REGON {REGON}. Wpis w rejestrze agentów ubezpieczeniowych KNF: {KNF_NO} ({KNF_URL}), tam też lista współpracujących zakładów ubezpieczeń.
+
+Kontakt: telefon {PHONE}, e-mail {MAIL}. Facebook: {FB}
+
+## Obszary ubezpieczeń
+{areas}
+
+## Pozostałe strony
+- [Pomoc przy szkodzie]({SITE}/{CLAIMS['slug']}.html)
+- [Polityka prywatności]({SITE}/prywatnosc.html)
+- [English version]({SITE}/en/)
+""", encoding="utf-8")
+
 def main():
     global L, AREAS, CLAIMS, TOPICS, FAQ_LEAD
+    AREAS_PL = list(AREAS)
+    globals()["AREAS_PL"] = AREAS_PL
     for name, html in pages():
         (ROOT / name).write_text(html, encoding="utf-8")
     import content_en as E
@@ -678,6 +734,7 @@ def main():
     (ROOT / "en").mkdir(exist_ok=True)
     for name, html in pages():
         (ROOT / "en" / name).write_text(to_en(html), encoding="utf-8")
+    write_seo_files()
     print("ok")
 
 if __name__ == "__main__":
